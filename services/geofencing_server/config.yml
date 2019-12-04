@@ -1,0 +1,47 @@
+LOGGING:
+  version: 1
+
+  handlers:
+    console:
+      class: logging.StreamHandler
+      formatter: default
+      level: DEBUG
+
+  formatters:
+    default:
+      format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+      class: logging.Formatter
+
+  disable_existing_loggers: false
+
+  root:
+    level: DEBUG
+    handlers: [console]
+
+  loggers:
+    proton:
+      level: INFO
+
+    swim-pubsub:
+      level: DEBUG
+
+    geofencing-service:
+      level: DEBUG
+
+BROKER:
+  host: "rabbitmq:5671"
+  cert_db: "/secrets/broker/ca_certificate.pem"
+  cert_file: "/secrets/broker/client/client_certificate.pem"
+  cert_key: "/secrets/broker/client/client_key.pem"
+
+SUBSCRIPTION-MANAGER:
+  host: "nginx:8443"
+  https: true
+  timeout: 30
+  verify: "/secrets/web_server/ca_certificate.pem"
+
+MONGO:
+  db: ${MONGO_DB_NAME}
+
+GEOFENCING_SERVER_SM_USER: ${GEOFENCING_SERVER_SM_USER}
+GEOFENCING_SERVER_SM_PASS: ${GEOFENCING_SERVER_SM_PASS}

@@ -1,0 +1,16 @@
+*.py[cod]
+venv*/
+dist/
+build/
+log/
+*.egg-info/
+.idea/
+.cache/
+__pycache__/
+.coverage
+/.pytest_cachea
+services/subscription_manager/src
+services/geofencing_service/src
+services/geofencing_viewer/src
+services/swim_user_config/src
+*.env

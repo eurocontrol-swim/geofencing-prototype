@@ -1,0 +1,42 @@
+
+LOGGING:
+  version: 1
+
+  handlers:
+    console:
+      class: logging.StreamHandler
+      formatter: default
+      level: DEBUG
+
+  formatters:
+    default:
+      format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+      class: logging.Formatter
+
+  disable_existing_loggers: false
+
+  root:
+    level: INFO
+    handlers: [console]
+
+  loggers:
+    requests:
+      level: ERROR
+    urllib3:
+      level: ERROR
+
+
+SQLALCHEMY_DATABASE_URI: "postgresql+psycopg2://${DB_USER}:${DB_PASS}@postgres/${DB_NAME}?sslmode=require"
+
+SQLALCHEMY_TRACK_MODIFICATIONS: False  # silence the deprecation warning
+
+BROKER:
+  host: "rabbitmq:15671"
+  https: True
+  username: ${BROKER_ADMIN_USER}
+  password: ${BROKER_ADMIN_PASS}
+  cert_path: "/secrets/ca_certificate.pem"
+  retry: 10
+
+DB_PROVISION_RETRY: 10
+MAX_BROKER_QUEUE_LENGTH: 100

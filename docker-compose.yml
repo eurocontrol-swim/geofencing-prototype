@@ -1,0 +1,200 @@
+version: "3.5"
+
+# TODO: pull images from docker hub
+
+
+services:
+  sm-db:
+    image: swim-postgres
+    build:
+      context: ./
+      dockerfile: ./services/db/postgres/Dockerfile
+    container_name: postgres
+    environment:
+      - DB_NAME=smdb
+      - DB_USER=${DB_USER}
+      - DB_PASS=${DB_PASS}
+    volumes:
+      - db-data:/var/lib/postgresql/data
+      - ./services/db/postgres/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d/
+    command: postgres -c config_file=/etc/postgresql.conf
+    networks:
+      - backend
+
+  geofencing-db:
+    image: mongo
+    build:
+      context: ./
+      dockerfile: ./services/db/mongo/Dockerfile
+    container_name: postgres
+    environment:
+      - GEOFENCING_DB_NAME=geodb
+#      - GEOFENCING_DB_USER=${GEOFENCING_DB_USER}
+#      - GEOFENCING_DB_PASS=${GEOFENCING_DB_PASS}
+#    volumes:
+#      - db-data:/var/lib/postgresql/data
+#      - ./services/db/postgres/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d/
+#    command: postgres -c config_file=/etc/postgresql.conf
+    networks:
+      - backend
+
+  broker:
+    image: rabbitmq_amqp10
+    hostname: rabbitmq
+    build:
+      context: ./
+      dockerfile: ./services/broker/rabbitmq/Dockerfile
+      args:
+        - BROKER_ADMIN_USER=${BROKER_ADMIN_USER}
+        - BROKER_ADMIN_PASS=${BROKER_ADMIN_PASS}
+    container_name: rabbitmq
+    ports:
+      - 15671:15671
+    volumes:
+      - broker-data:/var/lib/rabbitmq
+      - ./secrets/rabbitmq/rabbitmq_definitions.json /etc/rabbitmq/rabbitmq_definitions.json
+    networks:
+      - backend
+
+  web-server:
+    image: swim-nginx
+    build:
+      context: ./
+      dockerfile: ./services/web_server/nginx/Dockerfile
+    container_name: nginx
+    ports:
+      - 80:8000
+      - 443:8443
+    volumes:
+      - ./services/web_server/nginx/conf.d/:/etc/nginx/conf.d/
+    depends_on:
+      - subscription-manager
+    networks:
+      - backend
+
+  subscription-manager:
+    image: subscription-manager
+    build: ./services/subscription_manager/src
+    container_name: subscription_manager
+    depends_on:
+      - sm-db
+      - broker
+    environment:
+      - DB_NAME=smdb
+      - DB_USER=${DB_USER}
+      - DB_PASS=${DB_PASS}
+      - BROKER_MGMT_USER=${BROKER_MGMT_USER}
+      - BROKER_MGMT_PASS=${BROKER_MGMT_PASS}
+    volumes:
+      - ./secrets/rabbitmq/ca_certificate.pem:/secrets/ca_certificate.pem
+      - ./services/subscription_manager/config.yml:/app/subscription_manager/_config.yml
+      - ./services/subscription_manager/entry.sh:/app/entry.sh
+    command: bash /app/entry.sh
+    networks:
+      - backend
+
+  subscription-manager-provision:
+    image: subscription-manager
+    build: ./services/subscription_manager/src
+    container_name: subscription_manager_provision
+    depends_on:
+      - broker
+      - sm-db
+    environment:
+      - DB_NAME=smdb
+      - GEOFENCING_CLIENT_BROKER_USER=${GEOFENCING_CLIENT_BROKER_USER}
+      - GEOFENCING_CLIENT_BROKER_PASS=${GEOFENCING_CLIENT_BROKER_PASS}
+      - DB_USER=${DB_USER}
+      - DB_PASS=${DB_PASS}
+      - SM_ADMIN_USER=${SM_ADMIN_USER}
+      - SM_ADMIN_PASS=${SM_ADMIN_PASS}
+      - GEOFENCING_SERVER_SM_USER=${GEOFENCING_SERVER_SM_USER}
+      - GEOFENCING_SERVER_SM_PASS=${GEOFENCING_SERVER_SM_PASS}
+      - GEOFENCING_CLIENT_SM_USER=${GEOFENCING_CLIENT_SM_USER}
+      - GEOFENCING_CLIENT_SM_PASS=${GEOFENCING_CLIENT_SM_PASS}
+      - BROKER_MGMT_USER=${BROKER_MGMT_USER}
+      - BROKER_MGMT_PASS=${BROKER_MGMT_PASS}
+      - BROKER_ADMIN_USER=${BROKER_ADMIN_USER}
+      - BROKER_ADMIN_PASS=${BROKER_ADMIN_PASS}
+    volumes:
+      - ./secrets/rabbitmq/ca_certificate.pem:/secrets/ca_certificate.pem
+      - ./services/subscription_manager/provision/config.yml:/app/provision/_config.yml
+      - ./services/subscription_manager/provision/entry.sh:/app/entry.sh
+    command: bash entry.sh
+    networks:
+      - backend
+
+  geofencing-service-provision:
+    image: geofencing-service
+    build: ./services/geofencing_service/src
+    container_name: geofencing_service_provision
+    depends_on:
+      - geofencing-db
+    environment:
+      - GEOFENCING_DB_NAME=geodb
+      - GEOFENCING_SERVER_USER=${GEOFENCING_SERVER_USER}
+      - GEOFENCING_SERVER_PASS=${GEOFENCING_SERVER_PASS}
+    volumes:
+      - ./services/geofencing_servet/provision/config.yml:/app/provision/_config.yml
+      - ./services/geofencing_servet/provision/entry.sh:/app/entry.sh
+    command: bash entry.sh
+    networks:
+      - backend
+
+  geofencing-service:
+    image: geofencing-service
+    build: services/geofencing_service/src
+    container_name: geofencing_service
+    depends_on:
+      - subscription-manager
+      - web-server
+    environment:
+      - GEOFENCING_SERVER_SM_USER=${GEOFENCING_SERVER_SM_USER}
+      - GEOFENCING_SERVER_SM_PASS=${GEOFENCING_SERVER_SM_PASS}
+    volumes:
+      - ./secrets/rabbitmq/client/:/secrets/broker/client
+      - ./secrets/rabbitmq/ca_certificate.pem:/secrets/broker/ca_certificate.pem
+      - ./secrets/nginx/ca_certificate.pem:/secrets/web_server/ca_certificate.pem
+      - ./services/geofencing_service/config.yml:/app/geofencing_service/_config.yml
+      - ./services/geofencing_service/entry.sh:/app/entry.sh
+    command: bash /app/entry.sh
+    networks:
+      - backend
+
+  geofencing-viewer:
+    image: geofencing-viewer
+    build: services/geofencing_viewer/src
+    container_name: geofencing_viewer
+    depends_on:
+      - subscription-manager
+      - web-server
+      - geofencing-service
+    environment:
+      - GEOFENCING_CLIENT_BROKER_USER=${GEOFENCING_CLIENT_BROKER_USER}
+      - GEOFENCING_CLIENT_BROKER_PASS=${GEOFENCING_CLIENT_BROKER_PASS}
+      - GEOFENCING_CLIENT_SM_USER=${GEOFENCING_CLIENT_SM_USER}
+      - GEOFENCING_CLIENT_SM_PASS=${GEOFENCING_CLIENT_SM_PASS}
+    volumes:
+      - ./secrets/rabbitmq/client/:/secrets/broker/client
+      - ./secrets/rabbitmq/ca_certificate.pem:/secrets/broker/ca_certificate.pem
+      - ./secrets/nginx/ca_certificate.pem:/secrets/web_server/ca_certificate.pem
+      - ./services/geofencing_viewer/config.yml:/app/geofencing_viewer/_config.yml
+      - ./services/geofencing_viewer/entry.sh:/app/entry.sh
+    ports:
+      - 5000:5000
+    command: bash /app/entry.sh
+    networks:
+      - backend
+
+
+networks:
+  backend:
+    driver: bridge
+
+volumes:
+  db-data:
+    driver: local
+  broker-data:
+    driver: local
+
+
