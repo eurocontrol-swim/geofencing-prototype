@@ -28,14 +28,15 @@ LOGGING:
 BROKER:
   host: "rabbitmq:5671"
   cert_db: "/secrets/broker/ca_certificate.pem"
-  sasl_user: ${GEOFENCING_CLIENT_BROKER_USER}
-  sasl_password: ${GEOFENCING_CLIENT_BROKER_PASS}
+  sasl_user: ${GEOFENCING_VIEWER_BROKER_USER}
+  sasl_password: ${GEOFENCING_VIEWER_BROKER_PASS}
 
-SUBSCRIPTION-MANAGER:
+
+# Geofencing service
+SUBSCRIPTION-MANAGER-API:
   host: "nginx:8443"
   https: true
   timeout: 30
   verify: "/secrets/web_server/ca_certificate.pem"
-
-GEOFENCING_CLIENT_SM_USER: ${GEOFENCING_CLIENT_SM_USER}
-GEOFENCING_CLIENT_SM_PASS: ${GEOFENCING_CLIENT_SM_PASS}
+  username: ${GEOFENCING_VIEWER_GS_USER}
+  password: ${GEOFENCING_VIEWER_GS_PASS}

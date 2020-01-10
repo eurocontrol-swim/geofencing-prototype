@@ -7,10 +7,10 @@ DOS2UNIX="${UTILS_DIR}/dos2unix.exe"
 BASE_DIR=${SERVICES_DIR}'/base'
 SUBSCRIPTION_MANAGER_DIR=${SERVICES_DIR}"/subscription_manager"
 SUBSCRIPTION_MANAGER_DIR_SRC=${SUBSCRIPTION_MANAGER_DIR}"/src"
-GEOFENCING_SERVER_DIR=${SERVICES_DIR}"/geofencing_service"
-GEOFENCING_SERVER_DIR_SRC=${GEOFENCING_SERVER_DIR}"/src"
-GEOFENCING_CLIENT_DIR=${SERVICES_DIR}"/geofencing_viewer"
-GEOFENCING_CLIENT_DIR_SRC=${GEOFENCING_CLIENT_DIR}"/src"
+GEOFENCING_SERVICE_DIR=${SERVICES_DIR}"/geofencing_service"
+GEOFENCING_SERVICE_DIR_SRC=${GEOFENCING_SERVICE_DIR}"/src"
+GEOFENCING_VIEWER_DIR=${SERVICES_DIR}"/geofencing_viewer"
+GEOFENCING_VIEWER_DIR_SRC=${GEOFENCING_VIEWER_DIR}"/src"
 GEOFENCING_USER_CONFIG_DIR=${SERVICES_DIR}"/swim_user_config"
 
 is_windows() {
@@ -55,22 +55,22 @@ prepare_repos() {
   echo "OK"
 
   echo -n "Preparing geofencing-service..."
-  if [[ -d ${GEOFENCING_SERVER_DIR_SRC} ]]
+  if [[ -d ${GEOFENCING_SERVICE_DIR_SRC} ]]
   then
-    cd "${GEOFENCING_SERVER_DIR_SRC}" || exit
+    cd "${GEOFENCING_SERVICE_DIR_SRC}" || exit
     git pull -q --rebase origin master
   else
-    git clone -q https://github.com/eurocontrol-swim/geofencing-service.git "${GEOFENCING_SERVER_DIR_SRC}"
+    git clone -q https://github.com/eurocontrol-swim/geofencing-service.git "${GEOFENCING_SERVICE_DIR_SRC}"
   fi
   echo "OK"
 
   echo -n "Preparing geofencing-viewer..."
-  if [[ -d ${GEOFENCING_CLIENT_DIR_SRC} ]]
+  if [[ -d ${GEOFENCING_VIEWER_DIR_SRC} ]]
   then
-    cd "${GEOFENCING_CLIENT_DIR_SRC}" || exit
+    cd "${GEOFENCING_VIEWER_DIR_SRC}" || exit
     git pull -q --rebase origin master
   else
-    git clone -q https://github.com/eurocontrol-swim/geofencing-viewer.git "${GEOFENCING_CLIENT_DIR_SRC}"
+    git clone -q https://github.com/eurocontrol-swim/geofencing-viewer.git "${GEOFENCING_VIEWER_DIR_SRC}"
   fi
   echo "OK"
 

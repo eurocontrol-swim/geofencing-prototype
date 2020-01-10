@@ -1,8 +1,5 @@
 version: "3.5"
 
-# TODO: pull images from docker hub
-
-
 services:
   sm-db:
     image: swim-postgres
@@ -12,29 +9,27 @@ services:
     container_name: postgres
     environment:
       - DB_NAME=smdb
-      - DB_USER=${DB_USER}
-      - DB_PASS=${DB_PASS}
+      - DB_USER=${SM_DB_USER}
+      - DB_PASS=${SM_DB_PASS}
     volumes:
-      - db-data:/var/lib/postgresql/data
+      - sm-db-data:/var/lib/postgresql/data
       - ./services/db/postgres/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d/
     command: postgres -c config_file=/etc/postgresql.conf
     networks:
       - backend
 
   geofencing-db:
-    image: mongo
+    image: swim-mongo
     build:
       context: ./
       dockerfile: ./services/db/mongo/Dockerfile
-    container_name: postgres
+    container_name: mongo
+    ports:
+      - 27017:27017
     environment:
       - GEOFENCING_DB_NAME=geodb
-#      - GEOFENCING_DB_USER=${GEOFENCING_DB_USER}
-#      - GEOFENCING_DB_PASS=${GEOFENCING_DB_PASS}
-#    volumes:
-#      - db-data:/var/lib/postgresql/data
-#      - ./services/db/postgres/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d/
-#    command: postgres -c config_file=/etc/postgresql.conf
+    volumes:
+      - geofencing-db-data:/data/db
     networks:
       - backend
 
@@ -69,11 +64,12 @@ services:
       - ./services/web_server/nginx/conf.d/:/etc/nginx/conf.d/
     depends_on:
       - subscription-manager
+      - geofencing-service
     networks:
       - backend
 
   subscription-manager:
-    image: subscription-manager
+    image: subscription-manager.g
     build: ./services/subscription_manager/src
     container_name: subscription_manager
     depends_on:
@@ -81,8 +77,8 @@ services:
       - broker
     environment:
       - DB_NAME=smdb
-      - DB_USER=${DB_USER}
-      - DB_PASS=${DB_PASS}
+      - DB_USER=${SM_DB_USER}
+      - DB_PASS=${SM_DB_PASS}
       - BROKER_MGMT_USER=${BROKER_MGMT_USER}
       - BROKER_MGMT_PASS=${BROKER_MGMT_PASS}
     volumes:
@@ -94,7 +90,7 @@ services:
       - backend
 
   subscription-manager-provision:
-    image: subscription-manager
+    image: subscription-manager.g
     build: ./services/subscription_manager/src
     container_name: subscription_manager_provision
     depends_on:
@@ -102,16 +98,14 @@ services:
       - sm-db
     environment:
       - DB_NAME=smdb
-      - GEOFENCING_CLIENT_BROKER_USER=${GEOFENCING_CLIENT_BROKER_USER}
-      - GEOFENCING_CLIENT_BROKER_PASS=${GEOFENCING_CLIENT_BROKER_PASS}
-      - DB_USER=${DB_USER}
-      - DB_PASS=${DB_PASS}
+      - GEOFENCING_VIEWER_BROKER_USER=${GEOFENCING_VIEWER_BROKER_USER}
+      - GEOFENCING_VIEWER_BROKER_PASS=${GEOFENCING_VIEWER_BROKER_PASS}
+      - DB_USER=${SM_DB_USER}
+      - DB_PASS=${SM_DB_PASS}
       - SM_ADMIN_USER=${SM_ADMIN_USER}
       - SM_ADMIN_PASS=${SM_ADMIN_PASS}
-      - GEOFENCING_SERVER_SM_USER=${GEOFENCING_SERVER_SM_USER}
-      - GEOFENCING_SERVER_SM_PASS=${GEOFENCING_SERVER_SM_PASS}
-      - GEOFENCING_CLIENT_SM_USER=${GEOFENCING_CLIENT_SM_USER}
-      - GEOFENCING_CLIENT_SM_PASS=${GEOFENCING_CLIENT_SM_PASS}
+      - GEOFENCING_SERVICE_SM_USER=${GEOFENCING_SERVICE_SM_USER}
+      - GEOFENCING_SERVICE_SM_PASS=${GEOFENCING_SERVICE_SM_PASS}
       - BROKER_MGMT_USER=${BROKER_MGMT_USER}
       - BROKER_MGMT_PASS=${BROKER_MGMT_PASS}
       - BROKER_ADMIN_USER=${BROKER_ADMIN_USER}
@@ -132,11 +126,11 @@ services:
       - geofencing-db
     environment:
       - GEOFENCING_DB_NAME=geodb
-      - GEOFENCING_SERVER_USER=${GEOFENCING_SERVER_USER}
-      - GEOFENCING_SERVER_PASS=${GEOFENCING_SERVER_PASS}
+      - GEOFENCING_VIEWER_GS_USER=${GEOFENCING_VIEWER_GS_USER}
+      - GEOFENCING_VIEWER_GS_PASS=${GEOFENCING_VIEWER_GS_PASS}
     volumes:
-      - ./services/geofencing_servet/provision/config.yml:/app/provision/_config.yml
-      - ./services/geofencing_servet/provision/entry.sh:/app/entry.sh
+      - ./services/geofencing_service/provision/config.yml:/app/provision/_config.yml
+      - ./services/geofencing_service/provision/entry.sh:/app/entry.sh
     command: bash entry.sh
     networks:
       - backend
@@ -147,10 +141,11 @@ services:
     container_name: geofencing_service
     depends_on:
       - subscription-manager
-      - web-server
+      - geofencing-db
     environment:
-      - GEOFENCING_SERVER_SM_USER=${GEOFENCING_SERVER_SM_USER}
-      - GEOFENCING_SERVER_SM_PASS=${GEOFENCING_SERVER_SM_PASS}
+      - GEOFENCING_DB_NAME=geodb
+      - GEOFENCING_SERVICE_SM_USER=${GEOFENCING_SERVICE_SM_USER}
+      - GEOFENCING_SERVICE_SM_PASS=${GEOFENCING_SERVICE_SM_PASS}
     volumes:
       - ./secrets/rabbitmq/client/:/secrets/broker/client
       - ./secrets/rabbitmq/ca_certificate.pem:/secrets/broker/ca_certificate.pem
@@ -166,14 +161,12 @@ services:
     build: services/geofencing_viewer/src
     container_name: geofencing_viewer
     depends_on:
-      - subscription-manager
-      - web-server
       - geofencing-service
     environment:
-      - GEOFENCING_CLIENT_BROKER_USER=${GEOFENCING_CLIENT_BROKER_USER}
-      - GEOFENCING_CLIENT_BROKER_PASS=${GEOFENCING_CLIENT_BROKER_PASS}
-      - GEOFENCING_CLIENT_SM_USER=${GEOFENCING_CLIENT_SM_USER}
-      - GEOFENCING_CLIENT_SM_PASS=${GEOFENCING_CLIENT_SM_PASS}
+      - GEOFENCING_VIEWER_BROKER_USER=${GEOFENCING_VIEWER_BROKER_USER}
+      - GEOFENCING_VIEWER_BROKER_PASS=${GEOFENCING_VIEWER_BROKER_PASS}
+      - GEOFENCING_VIEWER_GS_USER=${GEOFENCING_VIEWER_GS_USER}
+      - GEOFENCING_VIEWER_GS_PASS=${GEOFENCING_VIEWER_GS_PASS}
     volumes:
       - ./secrets/rabbitmq/client/:/secrets/broker/client
       - ./secrets/rabbitmq/ca_certificate.pem:/secrets/broker/ca_certificate.pem
@@ -181,7 +174,7 @@ services:
       - ./services/geofencing_viewer/config.yml:/app/geofencing_viewer/_config.yml
       - ./services/geofencing_viewer/entry.sh:/app/entry.sh
     ports:
-      - 5000:5000
+      - 3000:3000
     command: bash /app/entry.sh
     networks:
       - backend
@@ -192,7 +185,9 @@ networks:
     driver: bridge
 
 volumes:
-  db-data:
+  sm-db-data:
+    driver: local
+  geofencing-db-data:
     driver: local
   broker-data:
     driver: local

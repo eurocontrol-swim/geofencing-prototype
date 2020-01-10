@@ -40,3 +40,35 @@ BROKER:
 
 DB_PROVISION_RETRY: 10
 MAX_BROKER_QUEUE_LENGTH: 100
+
+
+DB_USERS:
+  - user: ${SM_ADMIN_USER}
+    pass: ${SM_ADMIN_PASS}
+    admin: true
+  - user: ${GEOFENCING_SERVICE_SM_USER}
+    pass: ${GEOFENCING_SERVICE_SM_PASS}
+
+BROKER_USERS:
+  - user: ${BROKER_MGMT_USER}
+    pass: ${BROKER_MGMT_PASS}
+    permissions:
+      configure: ".*"
+      write: ".*"
+      read: ".*"
+    tags:
+      - management
+  - user: ${GEOFENCING_VIEWER_BROKER_USER}
+    pass: ${GEOFENCING_VIEWER_BROKER_PASS}
+    permissions:
+      configure: ".*"
+      write: ""
+      read: ".*"
+
+BROKER_POLICIES:
+  - name: 'max-queue-length'
+    pattern: ".*"
+    priority: 1
+    apply_to: "queues"
+    definitions:
+      max-length: 100

@@ -8,11 +8,11 @@
       "description": "Subscription Manager admin user",
       "default_user": "swim-sm-admin"
     },
-    "GEOFENCING_SERVER_SM": {
+    "GEOFENCING_SERVICE_SM": {
       "description": "SWIM ADSB user for Subscription Manager",
       "default_user": "geofencing-service"
     },
-    "GEOFENCING_CLIENT_SM": {
+    "GEOFENCING_VIEWER_GS": {
       "description": "SWIM Explorer user for Subscription Manager",
       "default_user": "geofencing-viewer"
     },
@@ -24,7 +24,7 @@
       "description": "Broker Management user",
       "default_user": "swim-broker-mgmt"
     },
-    "GEOFENCING_CLIENT_BROKER": {
+    "GEOFENCING_VIEWER_BROKER": {
       "description": "SWIM Explorer user for the broker",
       "default_user": "geofencing-viewer-broker"
     }
