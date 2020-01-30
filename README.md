@@ -28,7 +28,7 @@ The platform is designed with a microservices approach and is run with [docker](
 Below you can see the architecture design diagram along with the relationships of the COTS as well as the internally developed
 services and libraries:
 
-TODO: Add architecture image
+![alt text](geofencing.png "Geofencing architecture")
 
 ## Installation
 
