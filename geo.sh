@@ -22,9 +22,9 @@ is_windows() {
 user_config() {
 
   echo "GEOFENCING user configuration..."
-  echo -e "=========================="
+  echo -e "================================"
 
-  ENV_FILE="${ROOT_DIR}/swim.env"
+  ENV_FILE="${ROOT_DIR}/geo.env"
 
   touch "${ENV_FILE}"
 
@@ -35,14 +35,14 @@ user_config() {
     "${DOS2UNIX}" -q "${ENV_FILE}"
   fi
 
-  while read LINE; do export "$LINE"; done < "${ENV_FILE}"
+  while read -r LINE; do export "${LINE?}"; done < "${ENV_FILE}"
 
   rm "${ENV_FILE}"
 }
 
 prepare_repos() {
   echo "Preparing Git repositories..."
-  echo -e "============================\n"
+  echo -e "==============================\n"
 
   echo -n "Preparing subscription-manager..."
   if [[ -d ${SUBSCRIPTION_MANAGER_DIR_SRC} ]]
@@ -82,18 +82,23 @@ data_provision() {
   echo -e "============================================\n"
   docker-compose run subscription-manager-provision
   echo ""
+
+  echo "Data provisioning to Geofencing Service..."
+  echo -e "===========================================\n"
+  docker-compose run geofencing-service-provision
+  echo ""
 }
 
 start_services() {
   echo "Starting up GEOFENCING..."
-  echo -e "===================\n"
+  echo -e "=========================\n"
   docker-compose up -d web-server subscription-manager geofencing-service geofencing-viewer
   echo ""
 }
 
 stop_services_with_clean() {
   echo "Stopping GEOFENCING..."
-  echo -e "================\n"
+  echo -e "======================\n"
   docker-compose down
   echo ""
 }
@@ -108,7 +113,7 @@ stop_services() {
 build() {
   echo "Building images..."
   echo -e "==================\n"
-  # build the base image upon which the swim services will depend on
+  # build the base image upon which the geofencing services will depend on
   cd "${BASE_DIR}" || exit 1
 
   docker build -t swim-base -f Dockerfile .
@@ -130,9 +135,9 @@ status() {
 }
 
 usage() {
-  echo -e "Usage: swim.sh [COMMAND] [OPTIONS]\n"
+  echo -e "Usage: geo.sh [COMMAND] [OPTIONS]\n"
   echo "Commands:"
-  echo "    user_config     Prompts for username/password of all the swim related users"
+  echo "    user_config     Prompts for username/password of all the GEOFENCING related users"
   echo "    build           Clones/updates the necessary git repositories and builds the involved docker images"
   echo "    provision       Provisions the Subscription Manager with initial data (users)"
   echo "    start           Starts up all the GEOFENCING services"

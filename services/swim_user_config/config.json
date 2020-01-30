@@ -6,26 +6,30 @@
     },
     "SM_ADMIN": {
       "description": "Subscription Manager admin user",
-      "default_user": "swim-sm-admin"
+      "default_user": "sm-admin"
     },
     "GEOFENCING_SERVICE_SM": {
-      "description": "SWIM ADSB user for Subscription Manager",
-      "default_user": "geofencing-service"
+      "description": "Geofencing Service user for Subscription Manager",
+      "default_user": "geofencing-service-sm"
     },
-    "GEOFENCING_VIEWER_GS": {
-      "description": "SWIM Explorer user for Subscription Manager",
+    "GEOFENCING_VIEWER_SM": {
+      "description": "Geofencing Viewer user for Subscription Manager",
+      "default_user": "geofencing-viewer-sm"
+    },
+    "GEOFENCING_VIEWER": {
+      "description": "Geofencing Viewer user for Geofencing Service",
       "default_user": "geofencing-viewer"
     },
     "BROKER_ADMIN": {
       "description": "Broker admin user",
-      "default_user": "swim-broker-admin"
+      "default_user": "broker-admin"
     },
     "BROKER_MGMT": {
       "description": "Broker Management user",
-      "default_user": "swim-broker-mgmt"
+      "default_user": "broker-mgmt"
     },
     "GEOFENCING_VIEWER_BROKER": {
-      "description": "SWIM Explorer user for the broker",
+      "description": "Geofencing Viewer  user for the broker",
       "default_user": "geofencing-viewer-broker"
     }
   }

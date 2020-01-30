@@ -69,7 +69,7 @@ services:
       - backend
 
   subscription-manager:
-    image: subscription-manager.g
+    image: subscription-manager
     build: ./services/subscription_manager/src
     container_name: subscription_manager
     depends_on:
@@ -90,7 +90,7 @@ services:
       - backend
 
   subscription-manager-provision:
-    image: subscription-manager.g
+    image: subscription-manager
     build: ./services/subscription_manager/src
     container_name: subscription_manager_provision
     depends_on:
