@@ -47,6 +47,10 @@ SUBSCRIPTION-MANAGER-API:
   password: ${GEOFENCING_SERVICE_SM_PASS}
 
 MONGO:
-  db: ${GEOFENCING_DB_NAME}
+  db: ${DB_NAME}
   host: mongo
   port: 27017
+  ssl: true
+  ssl_ca_certs: "/secrets/mongo/ca_certificate.pem"
+  username: ${DB_USER}
+  password: ${DB_PASS}

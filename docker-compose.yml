@@ -27,9 +27,12 @@ services:
     ports:
       - 27017:27017
     environment:
-      - GEOFENCING_DB_NAME=geodb
+      - DB_NAME=geodb
+      - DB_USER=${GEOFENCING_DB_USER}
+      - DB_PASS=${GEOFENCING_DB_PASS}
     volumes:
       - geofencing-db-data:/data/db
+      - geofencing-db-config:/data/configdb
     networks:
       - backend
 
@@ -125,12 +128,15 @@ services:
     depends_on:
       - geofencing-db
     environment:
-      - GEOFENCING_DB_NAME=geodb
+      - DB_NAME=geodb
+      - DB_USER=${GEOFENCING_DB_USER}
+      - DB_PASS=${GEOFENCING_DB_PASS}
       - GEOFENCING_VIEWER_GS_USER=${GEOFENCING_VIEWER_GS_USER}
       - GEOFENCING_VIEWER_GS_PASS=${GEOFENCING_VIEWER_GS_PASS}
     volumes:
       - ./services/geofencing_service/provision/config.yml:/app/provision/_config.yml
       - ./services/geofencing_service/provision/entry.sh:/app/entry.sh
+      - ./secrets/mongo/ca_certificate.pem:/secrets/mongo/ca_certificate.pem
     command: bash entry.sh
     networks:
       - backend
@@ -143,13 +149,16 @@ services:
       - subscription-manager
       - geofencing-db
     environment:
-      - GEOFENCING_DB_NAME=geodb
+      - DB_NAME=geodb
+      - DB_USER=${GEOFENCING_DB_USER}
+      - DB_PASS=${GEOFENCING_DB_PASS}
       - GEOFENCING_SERVICE_SM_USER=${GEOFENCING_SERVICE_SM_USER}
       - GEOFENCING_SERVICE_SM_PASS=${GEOFENCING_SERVICE_SM_PASS}
     volumes:
       - ./secrets/rabbitmq/client/:/secrets/broker/client
       - ./secrets/rabbitmq/ca_certificate.pem:/secrets/broker/ca_certificate.pem
       - ./secrets/nginx/ca_certificate.pem:/secrets/web_server/ca_certificate.pem
+      - ./secrets/mongo/ca_certificate.pem:/secrets/mongo/ca_certificate.pem
       - ./services/geofencing_service/config.yml:/app/geofencing_service/_config.yml
       - ./services/geofencing_service/entry.sh:/app/entry.sh
     command: bash /app/entry.sh
@@ -188,6 +197,8 @@ volumes:
   sm-db-data:
     driver: local
   geofencing-db-data:
+    driver: local
+  geofencing-db-config:
     driver: local
   broker-data:
     driver: local

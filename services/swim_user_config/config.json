@@ -1,8 +1,12 @@
 {
   "USERS": {
-    "DB": {
-      "description": "Database user",
+    "GEOFENCING_DB": {
+      "description": "Geofencing Service DB user",
       "default_user": "geo"
+    },
+    "SM_DB": {
+      "description": "Subscription Manager DB user",
+      "default_user": "swim"
     },
     "SM_ADMIN": {
       "description": "Subscription Manager admin user",
@@ -16,7 +20,7 @@
       "description": "Geofencing Viewer user for Subscription Manager",
       "default_user": "geofencing-viewer-sm"
     },
-    "GEOFENCING_VIEWER": {
+    "GEOFENCING_VIEWER_GS": {
       "description": "Geofencing Viewer user for Geofencing Service",
       "default_user": "geofencing-viewer"
     },
