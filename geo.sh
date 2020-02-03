@@ -12,6 +12,7 @@ GEOFENCING_SERVICE_DIR_SRC=${GEOFENCING_SERVICE_DIR}"/src"
 GEOFENCING_VIEWER_DIR=${SERVICES_DIR}"/geofencing_viewer"
 GEOFENCING_VIEWER_DIR_SRC=${GEOFENCING_VIEWER_DIR}"/src"
 GEOFENCING_USER_CONFIG_DIR=${SERVICES_DIR}"/swim_user_config"
+GEOFENCING_USER_CONFIG_DIR_SRC=${GEOFENCING_USER_CONFIG_DIR}"/src"
 
 is_windows() {
   UNAME=$(uname)
@@ -20,6 +21,12 @@ is_windows() {
 }
 
 user_config() {
+  if [[ ${1} == '1' ]]
+  then
+    P='-p'
+  else
+    P=''
+  fi
 
   echo "GEOFENCING user configuration..."
   echo -e "================================"
@@ -28,14 +35,14 @@ user_config() {
 
   touch "${ENV_FILE}"
 
-  python "${GEOFENCING_USER_CONFIG_DIR}/main.py" "${GEOFENCING_USER_CONFIG_DIR}/config.json" "${ENV_FILE}"
+  python "${GEOFENCING_USER_CONFIG_DIR_SRC}/swim_user_config/main.py" -c "${GEOFENCING_USER_CONFIG_DIR}/config.json" -o "${ENV_FILE}" ${P}
 
   if is_windows
   then
     "${DOS2UNIX}" -q "${ENV_FILE}"
   fi
 
-  while read -r LINE; do export "${LINE?}"; done < "${ENV_FILE}"
+  while read -r LINE; do export "${LINE}"; done < "${ENV_FILE}"
 
   rm "${ENV_FILE}"
 }
@@ -71,6 +78,16 @@ prepare_repos() {
     git pull -q --rebase origin master
   else
     git clone -q https://github.com/eurocontrol-swim/geofencing-viewer.git "${GEOFENCING_VIEWER_DIR_SRC}"
+  fi
+  echo "OK"
+
+  echo -n "Preparing swim-user-config..."
+  if [[ -d ${GEOFENCING_USER_CONFIG_DIR_SRC} ]]
+  then
+    cd "${GEOFENCING_USER_CONFIG_DIR_SRC}" || exit
+    git pull -q --rebase origin master
+  else
+    git clone -q https://github.com/eurocontrol-swim/swim-user-config.git "${GEOFENCING_USER_CONFIG_DIR_SRC}"
   fi
   echo "OK"
 
@@ -137,20 +154,20 @@ status() {
 usage() {
   echo -e "Usage: geo.sh [COMMAND] [OPTIONS]\n"
   echo "Commands:"
-  echo "    user_config     Prompts for username/password of all the GEOFENCING related users"
-  echo "    build           Clones/updates the necessary git repositories and builds the involved docker images"
-  echo "    provision       Provisions the Subscription Manager with initial data (users)"
-  echo "    start           Starts up all the GEOFENCING services"
-  echo "    stop            Stops all the services"
-  echo "    stop --clean    Stops all the services and cleans up the containers"
-  echo "    status          Displays the status of the running containers"
+  echo "    user_config       Generates username/password for all the GEOFENCING related users"
+  echo "    user_config -p    Prompts for username/password for all the GEOFENCING related users"
+  echo "    build             Clones/updates the necessary git repositories and builds the involved docker images"
+  echo "    provision         Provisions the Subscription Manager with initial data (users)"
+  echo "    start             Starts up all the GEOFENCING services"
+  echo "    stop              Stops all the services"
+  echo "    stop --clean      Stops all the services and cleans up the containers"
+  echo "    status            Displays the status of the running containers"
   echo ""
 }
 
 if [[ $# -lt 1 || $# -gt 2  ]]
 then
   usage
-  exit 0
 fi
 
 ACTION=${1}
@@ -177,12 +194,11 @@ case ${ACTION} in
           *)
             echo -e "Invalid argument\n"
             usage
-            exit 1
             ;;
         esac
-        exit 0
+    else
+      stop_services
     fi
-    stop_services
     ;;
   provision)
     data_provision
@@ -191,7 +207,22 @@ case ${ACTION} in
     status
     ;;
   user_config)
-    user_config
+    if [[ -n ${2} ]]
+    then
+      EXTRA=${2}
+
+      case ${EXTRA} in
+          --prompt)
+            user_config 1
+            ;;
+          *)
+            echo -e "Invalid argument\n"
+            usage
+            ;;
+        esac
+    else
+      user_config 0
+    fi
     ;;
   help)
     usage
@@ -199,6 +230,5 @@ case ${ACTION} in
   *)
     echo -e "Invalid action\n"
     usage
-    exit 1
     ;;
 esac

@@ -1,40 +1,13 @@
 {
-  "USERS": {
-    "GEOFENCING_DB": {
-      "description": "Geofencing Service DB user",
-      "default_user": "geo"
-    },
-    "SM_DB": {
-      "description": "Subscription Manager DB user",
-      "default_user": "swim"
-    },
-    "SM_ADMIN": {
-      "description": "Subscription Manager admin user",
-      "default_user": "sm-admin"
-    },
-    "GEOFENCING_SERVICE_SM": {
-      "description": "Geofencing Service user for Subscription Manager",
-      "default_user": "geofencing-service-sm"
-    },
-    "GEOFENCING_VIEWER_SM": {
-      "description": "Geofencing Viewer user for Subscription Manager",
-      "default_user": "geofencing-viewer-sm"
-    },
-    "GEOFENCING_VIEWER_GS": {
-      "description": "Geofencing Viewer user for Geofencing Service",
-      "default_user": "geofencing-viewer"
-    },
-    "BROKER_ADMIN": {
-      "description": "Broker admin user",
-      "default_user": "broker-admin"
-    },
-    "BROKER_MGMT": {
-      "description": "Broker Management user",
-      "default_user": "broker-mgmt"
-    },
-    "GEOFENCING_VIEWER_BROKER": {
-      "description": "Geofencing Viewer  user for the broker",
-      "default_user": "geofencing-viewer-broker"
+    "USERS": {
+        "GEOFENCING_DB": "Geofencing Service DB user",
+        "SM_DB": "Subscription Manager DB user",
+        "SM_ADMIN": "Subscription Manager admin user",
+        "GEOFENCING_SERVICE_SM": "Geofencing Service user for Subscription Manager",
+        "GEOFENCING_VIEWER_SM": "Geofencing Viewer user for Subscription Manager",
+        "GEOFENCING_VIEWER_GS": "Geofencing Viewer user for Geofencing Service",
+        "BROKER_ADMIN": "Broker admin user",
+        "BROKER_MGMT": "Broker Management user",
+        "GEOFENCING_VIEWER_BROKER": "Geofencing Viewer  user for the broker"
     }
-  }
 }

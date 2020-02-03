@@ -75,6 +75,7 @@ First we need to clone this repository:
 
 ```shell
 git clone https://github.com/eurocontrol-swim/geofencing-deploy.git
+cd geofencing-deploy
 ```
 
 #### Configuration
@@ -84,25 +85,58 @@ Then we have to provide the necessary configuration of the services. This involv
 - application specific configuration
 
 ##### Geofencing users
-Several users are required across the Geofencing platform such as users, broker users etc.
-
-   - Usernames are predefined but you can also choose your own one. 
-   - Passwords can take any character and need to be equal or longer than 10 characters. Each provided password will be 
-checked for robustness and if it is deemed that it is not robust enough you will be re-prompted to choose a different one.
-
-Use the following command to provide usernames and passwords:
-
+Several users are required across the Geofencing platform such as db users, broker users etc.
+You can use the following command in order to generate them automatically:
 ```shell
-cd geofencing-deploy
 . ./geo.sh user_config
 ```
+> The leading `.` before `./geo.sh user_config` is required in order the provided usernames and passwords to be exported 
+> as environment variables on the host machine
 
-> the leading `.` before `./geo.sh user_config` is required in order the provided usernames and passwords to be exported as environment variables in the 
-> host machine
+The output will look like:
 
+```shell script
+GEOFENCING user configuration...
+================================
+
+Subscription Manager DB user
+[OK]
+
+Subscription Manager admin user
+[OK]
+
+Geofencing Service user for Subscription Manager
+[OK]
+
+Geofencing Viewer user for Geofencing Service
+[OK]
+
+Geofencing Viewer  user for the broker
+[OK]
+
+Geofencing Viewer user for Subscription Manager
+[OK]
+
+Geofencing Service DB user
+[OK]
+
+Broker Management user
+[OK]
+
+Broker admin user
+[OK]
+```
+
+However, you can always choose your own usernames/passwords by using the prompt option of the command:
+```shell
+cd geofencing-deploy
+. ./geo.sh user_config --prompt
+```
+
+> Passwords can take any character and need to be 10 or more characters long. Each provided password will be 
+checked for robustness and if it is deemed that it is not robust enough you will be re-prompted to choose a different one.
 
 The interaction shell then will look like:
-
 
 ```shell
 GEOFENCING user configuration...
@@ -111,37 +145,44 @@ GEOFENCING user configuration...
 Subscription Manager admin user
  username [sm-admin]: 
  password: 
+[OK]
 
 Geofencing Service user for Subscription Manager
  username [geofencing-service-sm]: 
  password: 
+[OK]
 
 Geofencing Viewer user for Geofencing Service
  username [geofencing-viewer]: 
  password: 
+[OK]
 
 Database user
  username [geo]: 
  password: 
+[OK]
 
 Geofencing Viewer  user for the broker
  username [geofencing-viewer-broker]: 
  password: 
+[OK]
 
 Geofencing Viewer user for Subscription Manager
  username [geofencing-viewe-smr]: 
  password: 
 The password is not strong enough. Please try again.
  password: 
+[OK]
 
 Broker Management user
  username [broker-mgmt]: 
  password: 
+[OK]
 
 Broker admin user
  username [broker-admin]: 
  password: 
-
+[OK]
 ```
 
 You can verify that the provided usernames and passwords were exported as environment variables by issuing the following
