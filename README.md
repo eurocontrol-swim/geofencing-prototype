@@ -143,44 +143,44 @@ GEOFENCING user configuration...
 ==========================
 
 Subscription Manager admin user
- username [sm-admin]: 
+ username: sm-admin 
  password: 
 [OK]
 
 Geofencing Service user for Subscription Manager
- username [geofencing-service-sm]: 
+ username: geofencing-service-sm 
  password: 
 [OK]
 
 Geofencing Viewer user for Geofencing Service
- username [geofencing-viewer]: 
+ username: geofencing-viewer 
  password: 
 [OK]
 
 Database user
- username [geo]: 
+ username: geo 
  password: 
 [OK]
 
 Geofencing Viewer  user for the broker
- username [geofencing-viewer-broker]: 
+ username: geofencing-viewer-broker 
  password: 
 [OK]
 
 Geofencing Viewer user for Subscription Manager
- username [geofencing-viewe-smr]: 
+ username: geofencing-viewe-smr 
  password: 
 The password is not strong enough. Please try again.
  password: 
 [OK]
 
 Broker Management user
- username [broker-mgmt]: 
+ username: broker-mgmt 
  password: 
 [OK]
 
 Broker admin user
- username [broker-admin]: 
+ username: broker-admin 
  password: 
 [OK]
 ```
@@ -239,14 +239,14 @@ Moreover you can see the available options of this script with:
 Usage: geo.sh [COMMAND] [OPTIONS]
 
 Commands:
-    user_config     Prompts for username/password of all the GEOFENCING related users
-    build           Clones/updates the necessary git repositories and builds the involved docker images
-    provision       Provisions the Subscription Manager with initial data (users)
-    start           Starts up all the GEOFENCING services
-    stop            Stops all the services
-    stop --clean    Stops all the services and cleans up the containers
-    status          Displays the status of the running containers
-
+    user_config             Generates username/password for all the GEOFENCING related users
+    user_config --prompt    Prompts for username/password for all the GEOFENCING related users
+    build                   Clones/updates the necessary git repositories and builds the involved docker images
+    provision               Provisions the Subscription Manager with initial data (users)
+    start                   Starts up all the GEOFENCING services
+    stop                    Stops all the services
+    stop --clean            Stops all the services and cleans up the containers
+    status                  Displays the status of the running containers
 ```
 
 In order to get the demo platform up and running we first need to download the necessary repositories and build the 
