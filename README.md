@@ -258,7 +258,7 @@ involved docker images with the following command:
 
 > The first time you run this command it will take some time because of the download/build of docker images.
 
-> this has to be run only the first time we start GEOFENCING
+> In case you run this command after having deployed successfully GEOFENCING all the old data will be removed.
 
 After the necessary images are downloaded we are ready to get the services up and running. Before that
 we'll need to provision the Subscription Manager, the Broker and the Geofencing Service with some initial data about 
