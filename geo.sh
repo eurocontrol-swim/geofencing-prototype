@@ -122,6 +122,13 @@ stop_services_with_clean() {
   echo ""
 }
 
+
+stop_services_with_purge() {
+  stop_services_with_clean &&
+  docker volume ls | grep geofencing | awk '{print $2}'| xargs docker volume rm
+  echo ""
+}
+
 stop_services() {
   echo "Stopping GEOFENCING..."
   echo -e "================\n"
@@ -170,6 +177,7 @@ usage() {
   echo "    start                   Starts up all the GEOFENCING services"
   echo "    stop                    Stops all the services"
   echo "    stop --clean            Stops all the services and cleans up the containers"
+  echo "    stop --purge            Stops all the services and cleans up the containers and the volumes"
   echo "    status                  Displays the status of the running containers"
   echo ""
 }
@@ -199,6 +207,9 @@ case ${ACTION} in
       case ${EXTRA} in
           --clean)
             stop_services_with_clean
+            ;;
+          --purge)
+            stop_services_with_purge
             ;;
           *)
             echo -e "Invalid argument\n"
