@@ -1,6 +1,7 @@
 {
     "USERS": {
         "GEOFENCING_DB": "Geofencing Service DB user",
+        "POSTGRES": "Postgres DB user",
         "SM_DB": "Subscription Manager DB user",
         "SM_ADMIN": "Subscription Manager admin user",
         "GEOFENCING_SERVICE_SM": "Geofencing Service user for Subscription Manager",
