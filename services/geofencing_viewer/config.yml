@@ -44,25 +44,19 @@ SUBSCRIPTION-MANAGER-API:
 
 INITIAL_UAS_ZONES_FILTER:
   airspaceVolume:
-    polygon:
-      - LAT: 50.901767
-        LON: 4.371125
-      - LAT: 50.866953
-        LON: 4.224330
-      - LAT: 50.788595
-        LON: 4.342881
-      - LAT: 50.846430
-        LON: 4.535647
-      - LAT: 50.901767
-        LON: 4.371125
+    horizontalProjection:
+      type: 'Circle'
+      center: [4.503788, 50.826384]
+      radius: 20000
+    uomDimensions: 'M'
     lowerLimit: 0
     upperLimit: 100000
-    lowerVerticalReference: 'WGS84'
-    upperVerticalReference: 'WGS84'
-  startDateTime: '2020-01-01T00:00:00+01:00'
-  endDateTime: '2021-01-01T00:00:00+01:00'
+    upperVerticalReference: 'AGL'
+    lowerVerticalReference: 'AGL'
+  startDateTime: '2010-01-01T00:00:00+01:00'
+  endDateTime: '2030-01-01T00:00:00+01:00'
   regions:
     - 1
-  requestID: '1'
+
 
 POLLING_INTERVAL_IN_SEC: 1

@@ -54,3 +54,5 @@ MONGO:
   ssl_ca_certs: "/secrets/mongo/ca_certificate.pem"
   username: ${DB_USER}
   password: ${DB_PASS}
+
+POLYGON_TO_CIRCLE_EDGES: 40
