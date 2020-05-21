@@ -1,0 +1,78 @@
+{
+  "identifier": "NFZ6546",
+  "country": "FRA",
+  "name": "LFPG",
+  "type": "COMMON",
+  "restriction": "REQ_AUTHORISATION",
+  "reason": [
+    "AIR_TRAFFIC",
+    "OTHER"
+  ],
+  "otherReasonInfo": "Flying Whales",
+  "applicability": [
+    {
+      "startDateTime": "2018-12-31T15:59:60.00Z",
+      "endDateTime": "2019-12-31T15:59:60.00Z",
+      "permanent": "NO",
+      "schedule": [
+        {
+          "day": [
+            "ANY"
+          ],
+          "startTime": "16:00:00.00Z",
+          "endTime": "17:00:00.00Z"
+        },
+        {
+          "day": [
+            "SUN"
+          ],
+          "startTime": "10:00:00.00Z",
+          "endTime": "12:00:00.00Z"
+        }
+      ]
+    }
+  ],
+  "zoneAuthority": [
+    {
+      "name": "LFPG-UASZoneManager",
+      "email": "UASZoneManager@lfpg.fr",
+      "purpose": "AUTHORIZATION"
+    }
+  ],
+  "geometry": [
+    {
+      "upperLimit": 500,
+      "lowerLimit": 100,
+      "uomDimensions": "M",
+      "upperVerticalReference": "AMSL",
+      "lowerVerticalReference": "AMSL",
+      "horizontalProjection": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              2.485866,
+              49.029301
+            ],
+            [
+              2.604141,
+              49.034704
+            ],
+            [
+              2.631263,
+              48.987301
+            ],
+            [
+              2.510414,
+              48.983358
+            ],
+            [
+              2.485866,
+              49.029301
+            ]
+          ]
+        ]
+      }
+    }
+  ]
+}

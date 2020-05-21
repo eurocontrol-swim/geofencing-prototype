@@ -1,0 +1,114 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "UASZoneVersion",
+  "type": "object",
+  "properties": {
+    "identifier": {
+      "type": "string",
+      "maxLength": 7
+    },
+    "country": {
+      "type": "string",
+      "minLength": 3,
+      "maxLength": 3
+    },
+    "name": {
+      "type": "string",
+      "maxLength": 200
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "COMMON",
+        "CUSTOMIZED"
+      ]
+    },
+    "restriction": {
+      "type": "string",
+      "enum": [
+        "PROHIBITED",
+        "REQ_AUTHORISATION",
+        "CONDITIONAL",
+        "NO_RESTRICTION"
+      ]
+    },
+    "restrictionConditions": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "region": {
+      "type": "integer"
+    },
+    "reason": {
+      "type": "array",
+      "maxItems": 9,
+      "items": {
+        "type": "string",
+        "enum": [
+          "AIR_TRAFFIC",
+          "SENSITIVE",
+          "PRIVACY",
+          "POPULATION",
+          "NATURE",
+          "NOISE",
+          "FOREIGN_TERRITORY",
+          "EMERGENCY",
+          "OTHER"
+        ]
+      }
+    },
+    "otherReasonInfo": {
+      "type": "string",
+      "maxLength": 30
+    },
+    "regulationExemption": {
+      "type": "string",
+      "enum": [
+        "YES",
+        "NO"
+      ]
+    },
+    "uSpaceClass": {
+      "type": "string",
+      "maxLength": 100
+    },
+    "message": {
+      "type": "string",
+      "maxLength": 200
+    },
+    "zoneAuthority": {
+      "type": "array",
+      "items": {
+        "$ref": "UASZoneAuthority.json"
+      },
+      "minItems": 1
+    },
+    "applicability": {
+      "type": "array",
+      "items": {
+        "$ref": "UASZoneTimePeriod.json"
+      }
+    },
+    "geometry": {
+      "type": "array",
+      "items": {
+        "$ref": "UASZoneAirspaceVolume.json"
+      },
+      "minItems": 1
+    },
+    "extendedProperties": {
+      "type": "object"
+    }
+  },
+  "required": [
+    "identifier",
+    "country",
+    "type",
+    "restriction",
+    "zoneAuthority",
+    "geometry"
+  ],
+  "additionalProperties": false
+}

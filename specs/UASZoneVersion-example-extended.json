@@ -1,0 +1,82 @@
+{
+  "identifier": "NFZ6546",
+  "country": "FRA",
+  "name": "LFPG",
+  "type": "COMMON",
+  "restriction": "REQ_AUTHORISATION",
+  "reason": [
+    "AIR_TRAFFIC",
+    "OTHER"
+  ],
+  "otherReasonInfo": "Flying Whales",
+  "applicability": [
+    {
+      "startDateTime": "2018-12-31T15:59:60.00Z",
+      "endDateTime": "2019-12-31T15:59:60.00Z",
+      "permanent": "NO",
+      "schedule": [
+        {
+          "day": [
+            "ANY"
+          ],
+          "startTime": "16:00:00.00Z",
+          "endTime": "17:00:00.00Z"
+        },
+        {
+          "day": [
+            "SUN"
+          ],
+          "startTime": "10:00:00.00Z",
+          "endTime": "12:00:00.00Z"
+        }
+      ]
+    }
+  ],
+  "zoneAuthority": [
+    {
+      "name": "LFPG-UASZoneManager",
+      "email": "UASZoneManager@lfpg.fr",
+      "purpose": "AUTHORIZATION"
+    }
+  ],
+  "geometry": [
+    {
+      "upperLimit": 500,
+      "lowerLimit": 100,
+      "uomDimensions": "M",
+      "upperVerticalReference": "AMSL",
+      "lowerVerticalReference": "AMSL",
+      "horizontalProjection": {
+        "type": "Circle",
+        "center": [
+          2.485866,
+          49.029301
+        ],
+        "radius": 5000
+      }
+    },
+    {
+      "upperLimit": 1000,
+      "lowerLimit": 500,
+      "uomDimensions": "M",
+      "upperVerticalReference": "AMSL",
+      "lowerVerticalReference": "AMSL",
+      "horizontalProjection": {
+        "type": "Circle",
+        "center": [
+          2.485866,
+          49.029301
+        ],
+        "radius": 7000
+      }
+    }
+  ],
+  "extendedProperties": {
+    "customProperty": "This is an additional property extending the initial model.",
+    "anotherProperty": 42,
+    "complexProperty": {
+      "subProperty": "Entire JSON objects can be used to extend the model.",
+      "booleanProperty": true
+    }
+  }
+}

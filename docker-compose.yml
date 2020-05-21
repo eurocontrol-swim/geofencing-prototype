@@ -137,6 +137,7 @@ services:
       - GEOFENCING_VIEWER_GS_PASS=${GEOFENCING_VIEWER_GS_PASS}
     volumes:
       - ./services/geofencing_service/provision/config.yml:/app/provision/_config.yml
+      - ./services/geofencing_service/provision/uas_zones.json:/app/provision/uas_zones.json
       - ./services/geofencing_service/provision/entry.sh:/app/entry.sh
       - ./secrets/mongo/ca_certificate.pem:/secrets/mongo/ca_certificate.pem
     command: bash entry.sh

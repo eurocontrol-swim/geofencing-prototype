@@ -1,0 +1,350 @@
+{
+	"$id": "https://eurocae.net/UASZone.schema.json",
+	"$schema": "http://json-schema.org/draft-07/schema#",
+	"title": "UASZoneMessages",
+	"definitions": {
+		"genericReply": {
+			"type": "object",
+			"required": [
+				"requestStatus",
+				"requestProcessedTimeStamp"
+			],
+			"properties": {
+				"requestStatus": {
+					"type": "string",
+					"enum": [
+						"OK",
+						"NOK"
+					]
+				},
+				"requestExceptionDescription": {
+					"type": "string"
+				},
+				"requestProcessedTimeStamp": {
+					"type": "string"
+				}
+			}
+		},
+		"UASZonesRequest": {
+			"type": "object",
+			"properties": {
+				"airspaceVolume": {
+					"$ref": "UASZoneAirspaceVolume.json"
+				},
+				"regions": {
+					"type": "array",
+					"items": {
+						"type": "integer"
+					}
+				},
+				"startDateTime": {
+					"type": "string",
+					"format": "date-time"
+				},
+				"endDateTime": {
+					"type": "string",
+					"format": "date-time"
+				}
+			}
+		},
+		"UASZonesReply": {
+			"type": "object",
+			"required": [
+				"genericReply"
+			],
+			"properties": {
+				"UASZoneList": {
+					"type": "array",
+					"items": {
+						"$ref": "UASZone.json"
+					}
+				},
+				"genericReply": {
+					"$ref": "#/definitions/genericReply"
+				}
+			}
+		},
+		"UASZonesUpdatesRequest": {
+			"type": "object",
+			"properties": {
+				"airspaceVolume": {
+					"$ref": "UASZoneAirspaceVolume.json"
+				},
+				"regions": {
+					"type": "array",
+					"items": {
+						"type": "integer"
+					}
+				},
+				"startDateTime": {
+					"type": "string",
+					"format": "date-time"
+				},
+				"endDateTime": {
+					"type": "string",
+					"format": "date-time"
+				},
+				"updatedAfterDateTime": {
+					"type": "string",
+					"format": "date-time"
+				}
+			}
+		},
+		"UASZonesUpdatesReply": {
+			"type": "object",
+			"properties": {
+				"UASZoneList": {
+					"type": "array",
+					"items": {
+						"$ref": "UASZone.json"
+					}
+				},
+				"genericReply": {
+					"$ref": "#/definitions/genericReply"
+				}
+			}
+		},
+		"subscribeToUASZonesUpdatesRequest": {
+			"type": "object",
+			"properties": {
+				"airspaceVolume": {
+					"$ref": "UASZoneAirspaceVolume.json"
+				},
+				"regions": {
+					"type": "array",
+					"items": {
+						"type": "integer"
+					}
+				},
+				"startDateTime": {
+					"type": "string",
+					"format": "date-time"
+				},
+				"endDateTime": {
+					"type": "string",
+					"format": "date-time"
+				}
+			}
+		},
+		"subscribeToUASZonesUpdatesReply": {
+			"type": "object",
+			"required": [
+				"genericReply"
+			],
+			"properties": {
+				"subscriptionID": {
+					"type": "string"
+				},
+				"publicationLocation": {
+					"type": "string",
+					"format": "uri"
+				},
+				"publicationLinkVerificationFrequency": {
+					"type": "string"
+				},
+				"subscriptionStatus": {
+					"type": "string",
+					"enum": [
+						"ACTIVE",
+						"PAUSED",
+						"DELETED"
+					]
+				},
+				"genericReply": {
+					"$ref": "#/definitions/genericReply"
+				}
+			}
+		},
+		"unsubscribeToUASZonesUpdatesReply": {
+			"type": "object",
+			"required": [
+				"genericReply"
+			],
+			"properties": {
+				"subscriptionID": {
+					"type": "string"
+				},
+				"subscriptionStatus": {
+					"type": "string",
+					"enum": [
+						"ACTIVE",
+						"PAUSED",
+						"DELETED"
+					]
+				},
+				"genericReply": {
+					"$ref": "#/definitions/genericReply"
+				}
+			}
+		},
+		"pauseUASZonesUpdatesSubscriptionRequest": {
+			"type": "object",
+			"required": [
+				"subscriptionStatus"
+			],
+			"properties": {
+				"subscriptionStatus": {
+					"type": "string",
+					"enum": [
+						"PAUSED"
+					]
+				}
+			}
+		},
+		"pauseUASZonesUpdatesSubscriptionReply": {
+			"type": "object",
+			"required": [
+				"genericReply"
+			],
+			"properties": {
+				"subscriptionID": {
+					"type": "string"
+				},
+				"subscriptionStatus": {
+					"type": "string",
+					"enum": [
+						"ACTIVE",
+						"PAUSED",
+						"DELETED"
+					]
+				},
+				"genericReply": {
+					"$ref": "#/definitions/genericReply"
+				}
+			}
+		},
+		"resumeUASZonesUpdatesSubscriptionRequest": {
+			"type": "object",
+			"required": [
+				"subscriptionStatus"
+			],
+			"properties": {
+				"subscriptionStatus": {
+					"type": "string",
+					"enum": [
+						"ACTIVE"
+					]
+				}
+			}
+		},
+		"resumeUASZonesUpdatesSubscriptionReply": {
+			"type": "object",
+			"required": [
+				"genericReply"
+			],
+			"properties": {
+				"subscriptionID": {
+					"type": "string"
+				},
+				"subscriptionStatus": {
+					"type": "string",
+					"enum": [
+						"ACTIVE",
+						"PAUSED",
+						"DELETED"
+					]
+				},
+				"genericReply": {
+					"$ref": "#/definitions/genericReply"
+				}
+			}
+		},
+		"getUASZonesUpdatesSubscriptionsReply": {
+			"type": "object",
+			"required": [
+				"genericReply"
+			],
+			"properties": {
+				"subscriptions": {
+					"type": "array",
+					"items": {
+						"type": "object",
+						"properties": {
+							"subscriptionID": {
+								"type": "string"
+							},
+							"airspaceVolume": {
+								"$ref": "UASZoneAirspaceVolume.json"
+							},
+							"regions": {
+								"type": "array",
+								"items": {
+									"type": "integer"
+								}
+							},
+							"startDateTime": {
+								"type": "string",
+								"format": "date-time"
+							},
+							"endDateTime": {
+								"type": "string",
+								"format": "date-time"
+							},
+							"publicationLocation": {
+								"type": "string",
+								"format": "uri"
+							},
+							"publicationLinkVerificationFrequency": {
+								"type": "string"
+							},
+							"subscriptionStatus": {
+								"type": "string",
+								"enum": [
+									"ACTIVE",
+									"PAUSED",
+									"DELETED"
+								]
+							}
+						}
+					}
+				},
+				"genericReply": {
+					"$ref": "#/definitions/genericReply"
+				}
+			}
+		},
+		"UASZoneUpdatePublication": {
+			"type": "object",
+			"required": [
+				"UASZone"
+			],
+			"properties": {
+				"UASZone": {
+					"$ref": "UASZone.json"
+				}
+			}
+		},
+		"subscriptionStatusNotification": {
+			"type": "object",
+			"required": [
+				"subscriptionID",
+				"subscriptionStatus",
+				"notificationReason"
+			],
+			"properties": {
+				"subscriptionID": {
+					"type": "string"
+				},
+				"subscriptionStatus": {
+					"type": "string",
+					"enum": [
+						"PAUSED",
+						"ACTIVE",
+						"DELETED"
+					]
+				},
+				"notificationReason": {
+					"type": "string",
+					"enum": [
+						"CHANGE_BY_SUBSCRIBER",
+						"CHANGE_BY_PROVIDER",
+						"HEARTBEAT"
+					]
+				},
+				"notificationReasonDescription": {
+					"type": "string"
+				}
+			}
+		}
+	}
+}

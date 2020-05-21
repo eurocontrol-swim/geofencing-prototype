@@ -125,7 +125,7 @@ stop_services_with_clean() {
 
 stop_services_with_purge() {
   stop_services_with_clean &&
-  docker volume ls -q | grep geofencingdeploy | xargs -r docker volume rm
+  docker volume ls -q | grep geofencing-prototype | xargs -r docker volume rm
   echo ""
 }
 
@@ -141,7 +141,7 @@ build() {
   echo "Removing old data..."
   echo -e "==================\n"
   # Remove existing volumes
-  docker volume ls -q | grep geofencingdeploy | xargs -r docker volume rm
+  docker volume ls -q | grep geofencing-prototype | xargs -r docker volume rm
 
   echo "Building images..."
   echo -e "==================\n"

@@ -1,0 +1,107 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "airspaceVolume",
+  "type": "object",
+  "definitions": {
+    "verticalReferenceType": {
+      "type": "string",
+      "enum": [
+        "AGL",
+        "AMSL"
+      ]
+    },
+    "polygonType": {
+      "type": "object",
+      "description": "Type for the description of the airspaceVolume projection onto the Earth´s surface. This type is a specialization of a geoJSON Polygon. The coordinates must be expressed as an array of [lon, lat] arrays using the Coordinate Reference System urn:ogc:def:crs:OGC::CRS84 as per the geoJSON Specification. See: https://tools.ietf.org/html/rfc7946#section-3.1.6",
+      "required": [
+        "type",
+        "coordinates"
+      ],
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "Polygon"
+          ]
+        },
+        "coordinates": {
+          "type": "array",
+          "items": {
+            "type": "array",
+            "minItems": 4,
+            "items": {
+              "type": "array",
+              "minItems": 2,
+              "maxItems": 2,
+              "items": {
+                "type": "number"
+              }
+            }
+          }
+        }
+      }
+    },
+    "circleType": {
+      "type": "object",
+      "description": "Type for the description of a circular horizontal projection of an airspaceVolume onto the Earth's surface. The coordinates of the center must be expressed as a [lon, lat] array using the Coordinate Reference System urn:ogc:def:crs:OGC::CRS84 as per the geoJSON Specification. See: https://tools.ietf.org/html/rfc7946#section-3.1.6",
+      "required": [
+        "type",
+        "center",
+        "radius"
+      ],
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "Circle"
+          ]
+        },
+        "center": {
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 2,
+          "items": {
+            "type": "number"
+          }
+        },
+        "radius": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        }
+      }
+    }
+  },
+  "properties": {
+    "uomDimensions": {
+      "type": "string",
+      "enum": [
+        "M",
+        "FT"
+      ]
+    },
+    "lowerLimit": {
+      "type": "integer"
+    },
+    "lowerVerticalReference": {
+      "$ref": "#/definitions/verticalReferenceType"
+    },
+    "upperLimit": {
+      "type": "integer"
+    },
+    "upperVerticalReference": {
+      "$ref": "#/definitions/verticalReferenceType"
+    },
+    "horizontalProjection": {
+      "oneOf": [
+        {"$ref": "#/definitions/polygonType"},
+        {"$ref": "#/definitions/circleType"}
+      ]
+    }
+  },
+  "required": [
+    "uomDimensions",
+    "lowerVerticalReference",
+    "upperVerticalReference",
+    "horizontalProjection"
+  ]
+}

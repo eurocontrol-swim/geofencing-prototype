@@ -1,0 +1,425 @@
+{
+  "uas_zones": [
+    {
+      "applicability": {
+        "endDateTime": "2021-01-01T00:00:00+00:00",
+        "permanent": "YES",
+        "schedule": [
+          {
+            "day": "MON",
+            "endTime": "18:00:00+00:00",
+            "startTime": "12:00:00+00:00"
+          }
+        ],
+        "startDateTime": "2020-01-01T00:00:00+00:00"
+      },
+      "country": "BEL",
+      "extendedProperties": {},
+      "geometry": [
+        {
+          "horizontalProjection": {
+            "coordinates": [
+              [
+                [
+                  4.2859,
+                  50.851563
+                ],
+                [
+                  4.381233,
+                  50.777316
+                ],
+                [
+                  4.466003,
+                  50.831553
+                ],
+                [
+                  4.330793,
+                  50.889391
+                ],
+                [
+                  4.2859,
+                  50.851563
+                ]
+              ],
+              [
+                [
+                  4.329385,
+                  50.863648
+                ],
+                [
+                  4.328055,
+                  50.865348
+                ],
+                [
+                  4.317369,
+                  50.86847
+                ],
+                [
+                  4.314826,
+                  50.867671
+                ],
+                [
+                  4.31592,
+                  50.865873
+                ],
+                [
+                  4.326508,
+                  50.862792
+                ],
+                [
+                  4.329385,
+                  50.863648
+                ]
+              ],
+              [
+                [
+                  4.362334,
+                  50.846844
+                ],
+                [
+                  4.360553,
+                  50.843125
+                ],
+                [
+                  4.364823,
+                  50.842244
+                ],
+                [
+                  4.366797,
+                  50.845977
+                ],
+                [
+                  4.362334,
+                  50.846844
+                ]
+              ],
+              [
+                [
+                  4.387284,
+                  50.844065
+                ],
+                [
+                  4.395417,
+                  50.842222
+                ],
+                [
+                  4.397841,
+                  50.839485
+                ],
+                [
+                  4.39297,
+                  50.838055
+                ],
+                [
+                  4.384977,
+                  50.839681
+                ],
+                [
+                  4.387284,
+                  50.844065
+                ]
+              ],
+              [
+                [
+                  4.367825,
+                  50.814009
+                ],
+                [
+                  4.376479,
+                  50.81521
+                ],
+                [
+                  4.400072,
+                  50.795249
+                ],
+                [
+                  4.381311,
+                  50.788147
+                ],
+                [
+                  4.376037,
+                  50.805531
+                ],
+                [
+                  4.372529,
+                  50.805314
+                ],
+                [
+                  4.367825,
+                  50.814009
+                ]
+              ]
+            ],
+            "type": "Polygon"
+          },
+          "lowerLimit": 0,
+          "lowerVerticalReference": "AMSL",
+          "uomDimensions": "M",
+          "upperLimit": 100000,
+          "upperVerticalReference": "AMSL"
+        }
+      ],
+      "identifier": "28525c8",
+      "message": "message",
+      "name": "Brussels",
+      "otherReasonInfo": "other reason",
+      "reason": [
+        "AIR_TRAFFIC"
+      ],
+      "region": 1,
+      "regulationExemption": "YES",
+      "restriction": "NO_RESTRICTION",
+      "restrictionConditions": [
+        "special conditions"
+      ],
+      "type": "COMMON",
+      "uSpaceClass": "EUROCONTROL",
+      "zoneAuthority": {
+        "contactName": "Authority manager",
+        "email": "auth@autority.be",
+        "intervalBefore": "P3Y",
+        "name": "5b5fe57451aa4a78b5d4289246b79c15",
+        "phone": "123123123",
+        "purpose": "AUTHORIZATION",
+        "service": "Authority service",
+        "siteURL": "https://authority.com"
+      }
+    },
+    {
+      "applicability": {
+        "endDateTime": "2021-01-01T00:00:00+00:00",
+        "permanent": "YES",
+        "schedule": [
+          {
+            "day": "MON",
+            "endTime": "18:00:00+00:00",
+            "startTime": "12:00:00+00:00"
+          }
+        ],
+        "startDateTime": "2020-01-01T00:00:00+00:00"
+      },
+      "country": "BEL",
+      "extendedProperties": {},
+      "geometry": [
+        {
+          "horizontalProjection": {
+            "center": [
+              4.514118,
+              50.824713
+            ],
+            "radius": 200,
+            "type": "Circle"
+          },
+          "lowerLimit": 500,
+          "lowerVerticalReference": "AMSL",
+          "uomDimensions": "M",
+          "upperLimit": 1000,
+          "upperVerticalReference": "AMSL"
+        },
+        {
+          "horizontalProjection": {
+            "center": [
+              4.514118,
+              50.824713
+            ],
+            "radius": 500,
+            "type": "Circle"
+          },
+          "lowerLimit": 1000,
+          "lowerVerticalReference": "AMSL",
+          "uomDimensions": "M",
+          "upperLimit": 1500,
+          "upperVerticalReference": "AMSL"
+        },
+        {
+          "horizontalProjection": {
+            "center": [
+              4.514118,
+              50.824713
+            ],
+            "radius": 1000,
+            "type": "Circle"
+          },
+          "lowerLimit": 1500,
+          "lowerVerticalReference": "AMSL",
+          "uomDimensions": "M",
+          "upperLimit": 2000,
+          "upperVerticalReference": "AMSL"
+        },
+        {
+          "horizontalProjection": {
+            "center": [
+              4.514118,
+              50.824713
+            ],
+            "radius": 2000,
+            "type": "Circle"
+          },
+          "lowerLimit": 2000,
+          "lowerVerticalReference": "AMSL",
+          "uomDimensions": "M",
+          "upperLimit": 2500,
+          "upperVerticalReference": "AMSL"
+        },
+        {
+          "horizontalProjection": {
+            "center": [
+              4.514118,
+              50.824713
+            ],
+            "radius": 3000,
+            "type": "Circle"
+          },
+          "lowerLimit": 2500,
+          "lowerVerticalReference": "AMSL",
+          "uomDimensions": "M",
+          "upperLimit": 3000,
+          "upperVerticalReference": "AMSL"
+        }
+      ],
+      "identifier": "c7b19b1",
+      "message": "message",
+      "name": "Tervuren",
+      "otherReasonInfo": "other reason",
+      "reason": [
+        "AIR_TRAFFIC"
+      ],
+      "region": 1,
+      "regulationExemption": "YES",
+      "restriction": "NO_RESTRICTION",
+      "restrictionConditions": [
+        "special conditions"
+      ],
+      "type": "COMMON",
+      "uSpaceClass": "EUROCONTROL",
+      "zoneAuthority": {
+        "contactName": "Authority manager",
+        "email": "auth@autority.be",
+        "intervalBefore": "P3Y",
+        "name": "3676477269f945bf8ed11780706d73ad",
+        "phone": "123123123",
+        "purpose": "AUTHORIZATION",
+        "service": "Authority service",
+        "siteURL": "https://authority.com"
+      }
+    },
+    {
+      "applicability": {
+        "endDateTime": "2021-01-01T00:00:00+00:00",
+        "permanent": "YES",
+        "schedule": [
+          {
+            "day": "MON",
+            "endTime": "18:00:00+00:00",
+            "startTime": "12:00:00+00:00"
+          }
+        ],
+        "startDateTime": "2020-01-01T00:00:00+00:00"
+      },
+      "country": "BEL",
+      "extendedProperties": {},
+      "geometry": [
+        {
+          "horizontalProjection": {
+            "center": [
+              4.700431,
+              50.879082
+            ],
+            "radius": 200,
+            "type": "Circle"
+          },
+          "lowerLimit": 500,
+          "lowerVerticalReference": "AMSL",
+          "uomDimensions": "M",
+          "upperLimit": 1000,
+          "upperVerticalReference": "AMSL"
+        },
+        {
+          "horizontalProjection": {
+            "center": [
+              4.700431,
+              50.879082
+            ],
+            "radius": 500,
+            "type": "Circle"
+          },
+          "lowerLimit": 1000,
+          "lowerVerticalReference": "AMSL",
+          "uomDimensions": "M",
+          "upperLimit": 1500,
+          "upperVerticalReference": "AMSL"
+        },
+        {
+          "horizontalProjection": {
+            "center": [
+              4.700431,
+              50.879082
+            ],
+            "radius": 1000,
+            "type": "Circle"
+          },
+          "lowerLimit": 1500,
+          "lowerVerticalReference": "AMSL",
+          "uomDimensions": "M",
+          "upperLimit": 2000,
+          "upperVerticalReference": "AMSL"
+        },
+        {
+          "horizontalProjection": {
+            "center": [
+              4.700431,
+              50.879082
+            ],
+            "radius": 2000,
+            "type": "Circle"
+          },
+          "lowerLimit": 2000,
+          "lowerVerticalReference": "AMSL",
+          "uomDimensions": "M",
+          "upperLimit": 2500,
+          "upperVerticalReference": "AMSL"
+        },
+        {
+          "horizontalProjection": {
+            "center": [
+              4.700431,
+              50.879082
+            ],
+            "radius": 3000,
+            "type": "Circle"
+          },
+          "lowerLimit": 2500,
+          "lowerVerticalReference": "AMSL",
+          "uomDimensions": "M",
+          "upperLimit": 3000,
+          "upperVerticalReference": "AMSL"
+        }
+      ],
+      "identifier": "593f5c5",
+      "message": "message",
+      "name": "Leuven",
+      "otherReasonInfo": "other reason",
+      "reason": [
+        "AIR_TRAFFIC"
+      ],
+      "region": 1,
+      "regulationExemption": "YES",
+      "restriction": "NO_RESTRICTION",
+      "restrictionConditions": [
+        "special conditions"
+      ],
+      "type": "COMMON",
+      "uSpaceClass": "EUROCONTROL",
+      "zoneAuthority": {
+        "contactName": "Authority manager",
+        "email": "auth@autority.be",
+        "intervalBefore": "P3Y",
+        "name": "966d0acd10964b40a035531038ccfe6d",
+        "phone": "123123123",
+        "purpose": "AUTHORIZATION",
+        "service": "Authority service",
+        "siteURL": "https://authority.com"
+      }
+    }
+  ]
+}

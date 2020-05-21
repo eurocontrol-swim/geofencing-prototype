@@ -1,52 +1,66 @@
-# Geofencing Service Deployment
+# Geofencing Service Prototype
 
 ## Overview
-This document describes the procedure to get up and running a Geofencing Service demo platform which enables external 
-client systems to get information about existing UAS zones as well as subscribe to receive updates about UAS zones over 
-specific geographic areas. Based on the SWIM-TI specifications, this demo utilises the AMQP v1.0 protocol in order to 
-enable the `producer` (Geofencing Service) to publish real time UAS zones' updates and a `consumer` (Geofencing Viewer) 
-to subscribe over one or more geograpfic areas receive the relevant information.
+This document describes the procedure to get up and running a Geofencing Service demo prototype which 
+enables external client systems to get information about existing UAS zones as well as subscribe to 
+receive updates about UAS zones over specific geographic areas. Based on the SWIM-TI specifications, 
+this demo utilises the AMQP v1.0 protocol in order to enable the `producer` (Geofencing Service) 
+to publish real time UAS zones' updates and a `consumer` (Geofencing Viewer) to subscribe over one 
+or more geograpfic areas receive the relevant information.
 
 More specifically, the main services involved are:
 
-- **Subscription Manager**: is the core of the whole system wrapping up the broker where the data flows through by managing its topics 
-to be published and its queues to consume from. It is supposed to be broker agnostic and for this demo [RabbitMQ](https://www.rabbitmq.com/)
-is used as a broker. Moreover it stores topics' and subscriptions' metadata in a [PostgreSQL](https://www.postgresql.org/)
-database and it exposes a REST API based on the [OpenAPI](https://www.openapis.org/) specifications.
-- **Geofencing Service**: is the main service of the demo which allows the creation and deletion of UAS zones. Moreover,
-it acts as a wrapper on top of the Subscription Manager by managing geographic specific subscriptions and publishes 
-relevant UAS zones' updates via the broker. The underlying data are stored in a [MongoDB](https://www.mongodb.com/) 
-database while it also exposes all the aforementioned actions via a REST API.  
-- **Geofencing Viewer** is the `consumer` implementation which subscribes over specific geographic areas (polygons) and 
-get updates about creation/deletion of underlying UAS zones.
+- **Subscription Manager**: is the core of the whole system wrapping up the broker where the data 
+flows through by managing its topics to be published and its queues to consume from. It is supposed 
+to be broker agnostic and for this demo [RabbitMQ](https://www.rabbitmq.com/) is used as a 
+broker. Moreover it stores topics' and subscriptions' metadata in a 
+[PostgreSQL](https://www.postgresql.org/) database and it exposes a REST API based on the 
+[OpenAPI](https://www.openapis.org/) specifications.
 
-> Both Geofencing Service and Geofencing Viewer make use of the [pubsub-facades](https://github.com/eurocontrol-swim/pubsub-facades)
-library which allows them to speak to the Subscription Manager, the brokeras well as with each other.
+- **Geofencing Service**: is the main service of the demo which allows the creation and deletion 
+of UAS zones. Moreover, it acts as a wrapper on top of the Subscription Manager by managing 
+geographic specific subscriptions and publishes relevant UAS zones' updates via the broker. 
+The underlying data are stored in a [MongoDB](https://www.mongodb.com/) database while it also
+exposes all the aforementioned actions via a REST API.  
 
-The platform is designed with a microservices approach and is run with [docker](https://docker.com).
+- **Geofencing Viewer** is the `consumer` implementation which subscribes over specific
+geographic areas (polygons) and get updates about creation/deletion of underlying UAS zones.
 
-Below you can see the architecture design diagram along with the relationships of the COTS as well as the internally developed
-services and libraries:
+> Both Geofencing Service and Geofencing Viewer make use of the 
+> [pubsub-facades](https://github.com/eurocontrol-swim/pubsub-facades)
+> library which allows them to speak to the Subscription Manager, the broker, as well as with 
+> each other.
 
-![alt text](geofencing.png "Geofencing architecture")
+The prototype is designed with a microservices approach and is run with 
+[docker](https://docker.com).
+
+Below you can see the architecture design diagram along with the relationships of the COTS as well 
+as the internally developed services and libraries:
+
+![alt text](doc/img/geofencing.png "Geofencing architecture")
 
 ## Installation
 
 ### Step by step
-The steps bellow will allow you to build and run the Geofencing Service demo from scratch. Make sure you follow them one by one in the given order.
+The steps bellow will allow you to build and run the Geofencing Service demo from scratch. Make sure
+you follow them one by one in the given order.
 
 #### Prerequisites
 Before starting, make sure the following software is installed and working on your machine:
     
 ##### **Linux/Mac users**
-   - [git](https://git-scm.com/downloads) which will be used to download the necessary repositories.
-   - [docker](https://docs.docker.com/install/) which will be used to host and run the whole demo platform
-   - [docker-compose](https://docs.docker.com/compose/install/) which will be used to orchestrate the deployment locally
-   - [python](https://www.python.org/downloads/) which will be used to run python custom scripts 
+   - [git](https://git-scm.com/downloads) which will be used to download the necessary 
+     repositories.
+   - [docker](https://docs.docker.com/install/) which will be used to host and run the whole 
+     demo prototype
+   - [docker-compose](https://docs.docker.com/compose/install/) which will be used to 
+     orchestrate the deployment locally
+   - [python](https://www.python.org/downloads/) which will be used to run python custom 
+     scripts 
 
 ##### **Windows users**
-   - [Docker Toolbox on Windows](https://docs.docker.com/toolbox/toolbox_install_windows/) (which installs all the
-   required tools and runs the Docker Engine via VirtualBox)
+   - [Docker Toolbox on Windows](https://docs.docker.com/toolbox/toolbox_install_windows/) 
+   (which installs all the required tools and runs the Docker Engine via VirtualBox)
    - [python](https://www.python.org/downloads/) which will be used to run python custom scripts
 
 ###### Post-installation
@@ -54,28 +68,30 @@ Before starting, make sure the following software is installed and working on yo
         ```
         git config --global core.autocrlf input
         ```
-   - Since Docker runs via VirtualBox, the various app/server sites involved in this demo will not be able to be accessed
-     from your host machine unless you apply some port forwarding rules. You may find instructions about how to do it
+   - Since Docker runs via VirtualBox, the various app/server sites involved in this demo will not 
+     be able to be accessed from your host machine unless you apply some port forwarding rules. You 
+     may find instructions about how to do it 
      [here](https://www.simplified.guide/virtualbox/port-forwarding). The rules that we need are:
 
         | Name | Host port | Guest Port |
         |---|---|---|
         | broker | 15671 | 15671 |
         | https | 443 | 443 |
-        | explorer | 3000 | 3000 |
+        | geofencing-viewer | 3000 | 3000 |
 
 
 #### Download repositories
 
-> **NOTE**: The next steps are done on a Unix-like command line interface (CLI) for all users. Linux and Mac users can
-> use any terminal application, however the Windows users will have to use the Docker CLI client that comes with Docker
-> Toolbox on Windows. This can be accessed by starting **Docker Quickstart Terminal**.
+> **NOTE**: The next steps are done on a Unix-like command line interface (CLI) for all users. 
+> Linux and Mac users can use any terminal application, however the Windows users will have to 
+> use the Docker CLI client that comes with Docker Toolbox on Windows. This can be accessed by 
+>starting **Docker Quickstart Terminal**.
 
 First we need to clone this repository:
 
 ```shell
-git clone https://github.com/eurocontrol-swim/geofencing-deploy.git
-cd geofencing-deploy
+git clone https://github.com/eurocontrol-swim/geofencing-prototype.git
+cd geofencing-prototype
 ```
 
 #### Configuration
@@ -85,13 +101,13 @@ Then we have to provide the necessary configuration of the services. This involv
 - application specific configuration
 
 ##### Geofencing users
-Several users are required across the Geofencing platform such as db users, broker users etc.
+Several users are required across the Geofencing prototype such as db users, broker users etc.
 You can use the following command in order to generate them automatically:
 ```shell
 . ./geo.sh user_config
 ```
-> The leading `.` before `./geo.sh user_config` is required in order the provided usernames and passwords to be exported 
-> as environment variables on the host machine
+> The leading `.` before `./geo.sh user_config` is required in order the provided usernames 
+> and passwords to be exported as environment variables on the host machine.
 
 The output will look like:
 
@@ -129,12 +145,13 @@ Broker admin user
 
 However, you can always choose your own usernames/passwords by using the prompt option of the command:
 ```shell
-cd geofencing-deploy
+cd geofencing-prototype
 . ./geo.sh user_config --prompt
 ```
 
-> Passwords can take any character and need to be 10 or more characters long. Each provided password will be 
-checked for robustness and if it is deemed that it is not robust enough you will be re-prompted to choose a different one.
+> Passwords can take any character and need to be 10 or more characters long. Each provided 
+> password will be checked for robustness and if it is deemed that it is not robust enough you 
+> will be re-prompted to choose a different one.
 
 The interaction shell then will look like:
 
@@ -185,49 +202,40 @@ Broker admin user
 [OK]
 ```
 
-You can verify that the provided usernames and passwords were exported as environment variables by issuing the following
-command:
+You can verify that the provided usernames and passwords were exported as environment variables by 
+issuing the following command:
 
 ```shell
 env
 ```
 
+> NOTE: if for some reason you need to reconfigure the users after having deployed the 
+> prototype then it's advisable to tead it down first and rebuild it in order to avoid any 
+> conflicts. More details [here](#update-prototype).
+
 
 ##### Application config files
-Under the services folder you can find one folder per app containing a `config.yml` file. 
+Under the services folder you can find one folder per app containing a `config.yml` file. These 
+are already pre-configured but you may want to customize them with your data. More specifically:
+ 
+###### Geofencing Service
+You can update the UAS zones found under `services/geofencing_service/provision_db/uas_zones.json` 
+by adding yours. Those zones will be loaded in DB upon deployment.
 
-These are already pre-configured but you may want to update the configuration of Geofencing Viewer and more specifically
-the part that defines the initial UAS Zones filter which will be used to fetch existing UAS Zones upon initialization:
+###### Geofencing Viewer 
+You can update the initial filter file found under `services/geofencing_viewer/config.yml` 
+at `INITIAL_UAS_ZONES_FILTER`. This filter will be used to load existing UAS zones upon 
+launching the app. Typically, you'll need a filter that will include the zones you configured 
+during the previous step. In this case the data are in YAML format but you can easily convert any 
+JSON formatted data to YAML using this [tool](https://www.json2yaml.com/). 
 
-```yaml
-INITIAL_UAS_ZONES_FILTER:
-  airspaceVolume:
-    polygon:
-      - LAT: 50.901767
-        LON: 4.371125
-      - LAT: 50.866953
-        LON: 4.224330
-      - LAT: 50.788595
-        LON: 4.342881
-      - LAT: 50.846430
-        LON: 4.535647
-      - LAT: 50.901767
-        LON: 4.371125
-    lowerLimit: 0
-    upperLimit: 100000
-    lowerVerticalReference: 'WGS84'
-    upperVerticalReference: 'WGS84'
-  startDateTime: '2020-01-01T00:00:00+01:00'
-  endDateTime: '2021-01-01T00:00:00+01:00'
-  regions:
-    - 1
-  requestID: '1'
-
-```
+> For both cases you can always consult the data schemas' specifications under the directory 
+> `specs`
+> 
 
 ### Deployment
-For the deployment process you can use the provided `shell` script `geo.sh`. Before using it though make it
-executable with the following command:
+For the deployment process you can use the provided `shell` script `geo.sh`. Before using it 
+though make it executable with the following command:
 
 ```shell
 chmod +x geo.sh
@@ -250,20 +258,22 @@ Commands:
     status                  Displays the status of the running containers
 ```
 
-In order to get the demo platform up and running we first need to download the necessary repositories and build the 
+In order to get the demo prototype up and running we first need to download the necessary repositories and build the 
 involved docker images with the following command:
  
 ```shell
 ./geo.sh build
 ```
 
-> The first time you run this command it will take some time because of the download/build of docker images.
+> The first time you run this command it will take some time because of the download/build of 
+> docker images.
 
-> In case you run this command after having deployed successfully GEOFENCING all the old data will be removed.
+> In case you run this command after having deployed successfully GEOFENCING all the old data 
+>will be removed.
 
-After the necessary images are downloaded we are ready to get the services up and running. Before that
-we'll need to provision the Subscription Manager, the Broker and the Geofencing Service with some initial data about 
-the involved users and this can be done with:
+After the necessary images are downloaded we are ready to get the services up and running. Before 
+that we'll need to provision the Subscription Manager, the Broker and the Geofencing Service with 
+some initial data about the involved users and this can be done with:
  
 ```shell
 ./geo.sh provision
@@ -298,54 +308,83 @@ b69511af5a95        rabbitmq_amqp10        "docker-entrypoint.s…"   20 seconds
 ### Usage
 
 #### Geofencing Viewer
-As soon as the platform is up and running, you can point your browser to [http://0.0.0.0:3000](http://0.0.0.0:3000) in
-order to access the Geofencing Viewer and play around. There you can subscribe over specific geographic areas by creating
-polygons (blue polygons) and providing some additional necessary information. As soon an UAS Zone (red polygons) creation 
-or deletion occurs it will depicted under your chosen area (as long as the subscription is active, i.e. not paused). 
+As soon as the prototype is up and running, you can point your browser to 
+[http://0.0.0.0:3000](http://0.0.0.0:3000) in order to access the Geofencing Viewer and play 
+around. There you can:
+
+- **view** the zones you created earlier and provided the geofencing service DB with. The zones will 
+  appear in red color signifying the resrtiction over those areas. By clicking on them, a pop up 
+  window will appear where you can review all the extra information of the zone.  
+
+- **subscribe** over specific geographic areas by creating polygons or circles on the map. This can be
+  done by choosing the respective icons at the top left corner of the map. Some additional necessary information will be
+  requested and if the request is successful the subscription area will turn into gray signifying 
+  that it is in `paused` state. By clicking on the specified area, a pop up window will appear 
+  where you can review all the information of the subscription you just created.
+
+- **resume** (activate) a subscription by clicking the button `Resume' on the pop up window. If the
+  request succeeds the subscription area will turn into blue. From this moment onwards, any uas zone 
+  that is created/deleted or happened to be created/deleted while the subscription was paused and 
+  whose area intersects with the area of the subscription will appear/disappear from the map.
+  
+- **pause** (deactivate) a subscription by clicking the button `Pause' on the pop up window. If the
+  request succeeds the subscription area will turn into gray. From this moment onward no updates will
+  be received regarding creation/deletion of uas zones.
+    
+- **ubsubscribe** (delete) a subscription by clicking the button `Pause' on the pop up window. If 
+  the request succeeds the subscription area will disappear from the map.
+  
+
+> NOTE: Besides subscription manipulation, Geofencing Viewer does not provide any interface for 
+> creating/deleting uas zones. For this purpose you can use the 
+> [Geofencing Service OpenAPI specs interface](#geofencing-service).
+
+> NOTE: Geofencing Viewer is supposed to be a client application, .i.e out of the scope of 
+> Geofencing prototype. However, for the purpose of this demo it comes together with 
+> the rest of the services, but it runs as a standalone web application not passing through the 
+> web server.
+  
 The interface will look similar to the below image:
 
 
-> NOTE: Geofencing Viewer is supposed to be a client application, .i.e out of the scope of Geofencing Service platform. 
-> However, for the purpose of this demo it comes together with the rest of the services, but it runs as a standalone web 
-> application not passing through the web server.
+![alt text](doc/img/geofencing_viewer.jpg "Geofencing Viewer")
 
-![alt text](geofencing_viewer.jpg "Geofencing Viewer")
 
-#### Geofencing Service
-Additionally, you may access the Geofencing Service OpenAPI specs site using the following link:
-[https://localhost/geofencing-service/api/1.0/ui/#/](https://localhost/geofencing-service/api/1.0/ui/#/). Notice
-that you may get a warning saying the the connections if not safe. This is expected as this demo uses mock certificates
-and not real ones. In there you can interact with it by observing the various transactions of subscriptions 
-that happen while using Geofencing Viewer and/or create/delete/retrieve UAS Zones. You can login using the user and 
-password you provided during the user configuration step earlier. The interface will look like the following image:
+#### <a name="geofencing-service"></a> Geofencing Service
+The Geofencing Service OpenAPI specs interface can be accessed using the following link:
+[https://localhost/geofencing-service/api/1.0/ui/#/](https://localhost/geofencing-service/api/1.0/ui/#/). 
+In there you can interact with it by observing the various transactions of subscriptions that happen 
+while using Geofencing Viewer and/or create/delete/retrieve UAS Zones. You can login using the user 
+and password you provided during the user configuration step earlier. The interface will look like:
 
-![alt text](geofencing_service.jpg "Geofencing Service")
+![alt text](doc/img/geofencing_service.jpg "Geofencing Service")
 
 
 #### Subscription Manager
 Moreover, you may access the Subscription Manager OpenAPI specs site using the following link:
-[https://localhost/subscription-manager/api/1.0/ui/#/](https://localhost/subscription-manager/api/1.0/ui/#/). Notice
-that you may get a warning saying the the connections if not safe. This is expected as this demo uses mock certificates
-and not real ones. In there you can observe the various transactions of topics and subscriptions that happen while 
-Geofencing Service is interacting with it. You can login using the user and password you provided during the user 
-configuration step earlier. The interface will look like the following image:
+[https://localhost/subscription-manager/api/1.0/ui/#/](https://localhost/subscription-manager/api/1.0/ui/#/). 
+In there you can observe the various transactions of topics and subscriptions that happen while 
+Geofencing Service is interacting with it. You can login using the user and password you provided 
+during the user configuration step earlier. The interface will look like:
 
-![alt text](subscription-manager.jpg "Subscription Manager")
+![alt text](doc/img/subscription-manager.jpg "Subscription Manager")
 
 #### RabbitMQ Management
 Lastly, you can also access the RabbitMQ management page using the following link:
-[https://localhost:15671/#/](https://localhost:15671/#/). Notice that you may get a warning saying the the connections 
-if not safe. This is expected as this demo uses mock certificates and not real ones. In there you can observe the queues
-that are created/deleted while using Geofencing Viewer as well as statistics about the flow of the incoming messages. You
-can login using the user and password you provided during the user configuration step earlier. The interface will look
-similar to the following image:
+[https://localhost:15671/#/](https://localhost:15671/#/). In there you can observe the queues that are created/deleted while using Geofencing Viewer 
+as well as statistics about the flow of the incoming messages. You can login using the user and 
+password you provided during the user configuration step earlier. The interface will look line:
 
-![alt text](broker.jpg "RabbitMQ Management")
+![alt text](doc/img/broker.jpg "RabbitMQ Management")
 
-### Stopping the Platform
+> NOTE: the three above interfaces run over HTTPS and they might give you a warning saying 
+> that the connections if not safe. This is expected because it's a prototype aiming at 
+> demo purposes and for that reason mock certificates were used.
+
+### Stopping the prototype
 
 
-In order to tear the platform down you can do:
+In order to tear the prototype down you can do:
 
 ```shell
 ./geo.sh stop
@@ -361,9 +400,10 @@ and if you want to remove the involved docker containers and volumes as well you
 ./geo.sh stop --purge
 ```
 
+### <a name="update-prototype"></a> Updating the prototype
 
-In case there is a change on the involved repositories you can update them by calling:
+In case there is a new version of any of the involved repositories you can update the prototype by:
 ```shell
-./geo.sh stop --clean  # if GEOFENCING is up running
+./geo.sh stop --clean  # if geofencing-prototype is up and running
 ./geo.sh build
 ```

@@ -1,0 +1,73 @@
+{
+	"$schema": "http://json-schema.org/draft-07/schema#",
+	"title": "timePeriod",
+	"type": "object",
+	"definitions": {
+		"weekDayType": {
+			"type": "string",
+			"enum": [
+				"MON",
+				"TUE",
+				"WED",
+				"THU",
+				"FRI",
+				"SAT",
+				"SUN",
+				"ANY"
+			]
+		},
+		"dailyPeriod": {
+			"type": "object",
+			"required": [
+				"day",
+				"startTime",
+				"endTime"
+			],
+			"properties": {
+				"day": {
+					"type": "array",
+					"items": {
+						"minItems": 1,
+						"maxItems": 7,
+						"$ref": "#/definitions/weekDayType"
+					}
+				},
+				"startTime": {
+					"type": "string",
+					"format": "time"
+				},
+				"endTime": {
+					"type": "string",
+					"format": "time"
+				}
+			}
+		}
+	},
+	"properties": {
+		"permanent": {
+			"type": "string",
+			"enum": [
+				"YES",
+				"NO"
+			]
+		},
+		"startDateTime": {
+			"type": "string",
+			"format": "date-time"
+		},
+		"endDateTime": {
+			"type": "string",
+			"format": "date-time"
+		},
+		"schedule": {
+			"type": "array",
+			"items": {
+				"minItems": 1,
+				"$ref": "#/definitions/dailyPeriod"
+			}
+		}
+	},
+	"required": [
+		"permanent"
+	]
+}
