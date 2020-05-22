@@ -1,30 +1,31 @@
 # Geofencing Service Prototype
 
 ## Overview
-This document describes the procedure to get up and running a Geofencing Service demo prototype which 
-enables external client systems to get information about existing UAS zones as well as subscribe to 
-receive updates about UAS zones over specific geographic areas. Based on the SWIM-TI specifications, 
-this demo utilises the AMQP v1.0 protocol in order to enable the `producer` (Geofencing Service) 
-to publish real time UAS zones' updates and a `consumer` (Geofencing Viewer) to subscribe over one 
-or more geograpfic areas receive the relevant information.
+This document describes the procedure to get up and running a Geofencing Service prototype which 
+enables external systems to get information about existing UAS zones as well as subscribe over 
+specific geographic areas and receive updates about intersecting UAS zones. Based on the SWIM-TI 
+specifications, this demo utilises the AMQP v1.0 protocol in order to enable the `producer 
+(Geofencing Service)` to publish real time UAS zones' updates and a `consumer (Geofencing Viewer)` 
+to subscribe over one or more geograpfic areas receive the relevant information.
 
 More specifically, the main services involved are:
 
 - **Subscription Manager**: is the core of the whole system wrapping up the broker where the data 
 flows through by managing its topics to be published and its queues to consume from. It is supposed 
-to be broker agnostic and for this demo [RabbitMQ](https://www.rabbitmq.com/) is used as a 
-broker. Moreover it stores topics' and subscriptions' metadata in a 
-[PostgreSQL](https://www.postgresql.org/) database and it exposes a REST API based on the 
-[OpenAPI](https://www.openapis.org/) specifications.
+to be broker agnostic and for this demo [RabbitMQ](https://www.rabbitmq.com/) is used. Moreover 
+it stores topics' and subscriptions' metadata in a [PostgreSQL](https://www.postgresql.org/) 
+database and it exposes a REST API based on the [OpenAPI](https://www.openapis.org/) 
+specifications.
 
-- **Geofencing Service**: is the main service of the demo which allows the creation and deletion 
-of UAS zones. Moreover, it acts as a wrapper on top of the Subscription Manager by managing 
-geographic specific subscriptions and publishes relevant UAS zones' updates via the broker. 
-The underlying data are stored in a [MongoDB](https://www.mongodb.com/) database while it also
-exposes all the aforementioned actions via a REST API.  
+- **Geofencing Service**: is the main service of the prototype (`producer`) which allows the 
+creation and deletion of UAS zones. Moreover, it acts as a wrapper on top of the Subscription 
+Manager by managing geographic specific subscriptions and publishing relevant UAS zones' updates 
+via the broker. The underlying data are stored in a [MongoDB](https://www.mongodb.com/) database 
+while it also exposes a REST API based on the [OpenAPI](https://www.openapis.org/) specifications.  
 
-- **Geofencing Viewer** is the `consumer` implementation which subscribes over specific
-geographic areas (polygons) and get updates about creation/deletion of underlying UAS zones.
+- **Geofencing Viewer** is the `consumer` implementation of the prototype which enables the user 
+to subscribe over specific geographic areas (polygons) and get updates about creation/deletion of 
+underlying UAS zones.
 
 > Both Geofencing Service and Geofencing Viewer make use of the 
 > [pubsub-facades](https://github.com/eurocontrol-swim/pubsub-facades)
@@ -42,28 +43,29 @@ as the internally developed services and libraries:
 ## Installation
 
 ### Step by step
-The steps bellow will allow you to build and run the Geofencing Service demo from scratch. Make sure
-you follow them one by one in the given order.
+The steps bellow will allow you to build and run the Geofencing Service prototype from scratch. 
+Please make sure you follow them one by one in the given order.
 
 #### Prerequisites
-Before starting, make sure the following software is installed and working on your machine:
+Before starting, check that the following software is installed and working on your machine:
     
 ##### **Linux/Mac users**
    - [git](https://git-scm.com/downloads) which will be used to download the necessary 
      repositories.
    - [docker](https://docs.docker.com/install/) which will be used to host and run the whole 
-     demo prototype
+     prototype
    - [docker-compose](https://docs.docker.com/compose/install/) which will be used to 
-     orchestrate the deployment locally
+     orchestrate the deployment
    - [python](https://www.python.org/downloads/) which will be used to run python custom 
      scripts 
 
 ##### **Windows users**
    - [Docker Toolbox on Windows](https://docs.docker.com/toolbox/toolbox_install_windows/) 
-   (which installs all the required tools and runs the Docker Engine via VirtualBox)
+     (which installs all the required tools and runs the Docker Engine via 
+     [VirtualBox](https://www.virtualbox.org/)
    - [python](https://www.python.org/downloads/) which will be used to run python custom scripts
 
-###### Post-installation
+###### Post-installation for Windows users
    - Before using git commands you need to disable conversion of checked out files to Windows format:
         ```
         git config --global core.autocrlf input
@@ -85,7 +87,7 @@ Before starting, make sure the following software is installed and working on yo
 > **NOTE**: The next steps are done on a Unix-like command line interface (CLI) for all users. 
 > Linux and Mac users can use any terminal application, however the Windows users will have to 
 > use the Docker CLI client that comes with Docker Toolbox on Windows. This can be accessed by 
->starting **Docker Quickstart Terminal**.
+> launching **Docker Quickstart Terminal**.
 
 First we need to clone this repository:
 
@@ -100,7 +102,7 @@ Then we have to provide the necessary configuration of the services. This involv
 - setting up the required users
 - application specific configuration
 
-##### Geofencing users
+##### Geofencing prototype users
 Several users are required across the Geofencing prototype such as db users, broker users etc.
 You can use the following command in order to generate them automatically:
 ```shell
@@ -153,11 +155,11 @@ cd geofencing-prototype
 > password will be checked for robustness and if it is deemed that it is not robust enough you 
 > will be re-prompted to choose a different one.
 
-The interaction shell then will look like:
+The interaction shell then will look similar to:
 
 ```shell
 GEOFENCING user configuration...
-==========================
+================================
 
 Subscription Manager admin user
  username: sm-admin 
@@ -210,24 +212,25 @@ env
 ```
 
 > NOTE: if for some reason you need to reconfigure the users after having deployed the 
-> prototype then it's advisable to tead it down first and rebuild it in order to avoid any 
+> prototype then it's advised to tear it down first and rebuild it in order to avoid any 
 > conflicts. More details [here](#update-prototype).
 
 
 ##### Application config files
 Under the services folder you can find one folder per app containing a `config.yml` file. These 
-are already pre-configured but you may want to customize them with your data. More specifically:
+are already pre-configured but you may want to customize some of them with your data. 
+More specifically:
  
 ###### Geofencing Service
-You can update the UAS zones found under `services/geofencing_service/provision_db/uas_zones.json` 
+You can update the UAS zones found under `services/geofencing_service/provision/uas_zones.json` 
 by adding yours. Those zones will be loaded in DB upon deployment.
 
 ###### Geofencing Viewer 
 You can update the initial filter file found under `services/geofencing_viewer/config.yml` 
 at `INITIAL_UAS_ZONES_FILTER`. This filter will be used to load existing UAS zones upon 
 launching the app. Typically, you'll need a filter that will include the zones you configured 
-during the previous step. In this case the data are in YAML format but you can easily convert any 
-JSON formatted data to YAML using this [tool](https://www.json2yaml.com/). 
+during the previous step. In this case though the data are in YAML format but you can easily convert 
+any JSON formatted data to YAML using this [tool](https://www.json2yaml.com/). 
 
 > For both cases you can always consult the data schemas' specifications under the directory 
 > `specs`
@@ -258,28 +261,28 @@ Commands:
     status                  Displays the status of the running containers
 ```
 
-In order to get the demo prototype up and running we first need to download the necessary repositories and build the 
-involved docker images with the following command:
+In order to get the prototype up and running we first need to download the necessary repositories 
+and build the involved docker images with the following command:
  
 ```shell
 ./geo.sh build
 ```
 
-> The first time you run this command it will take some time because of the download/build of 
-> docker images.
+> NOTE: The first time you run this command it will take some time because of the 
+> download/build of docker images.
 
-> In case you run this command after having deployed successfully GEOFENCING all the old data 
->will be removed.
+> NOTE: In case you run this command after having deployed successfully GEOFENCING all the 
+> old data will be removed.
 
 After the necessary images are downloaded we are ready to get the services up and running. Before 
 that we'll need to provision the Subscription Manager, the Broker and the Geofencing Service with 
-some initial data about the involved users and this can be done with:
+some initial data regarding the involved users and the initial uas zones. This can be done with:
  
 ```shell
 ./geo.sh provision
 ```
 
-> this has to be run only the first time we start Geofencing
+> this has to be run only the first time we deploy the Geofencing prototype
 
 and then we can start the services:
 
@@ -316,16 +319,18 @@ around. There you can:
   appear in red color signifying the resrtiction over those areas. By clicking on them, a pop up 
   window will appear where you can review all the extra information of the zone.  
 
-- **subscribe** over specific geographic areas by creating polygons or circles on the map. This can be
-  done by choosing the respective icons at the top left corner of the map. Some additional necessary information will be
-  requested and if the request is successful the subscription area will turn into gray signifying 
-  that it is in `paused` state. By clicking on the specified area, a pop up window will appear 
-  where you can review all the information of the subscription you just created.
+- **subscribe** over specific geographic areas by creating polygons or circles on the map. This can 
+  be done by choosing the respective icons at the top left corner of the map. Some additional 
+  necessary information will be requested and if the request is successful the subscription area 
+  will turn into gray signifying that it is in `paused` state. By clicking on the specified area, 
+  a pop up window will appear where you can review all the information of the subscription you just 
+  created.
 
 - **resume** (activate) a subscription by clicking the button `Resume' on the pop up window. If the
   request succeeds the subscription area will turn into blue. From this moment onwards, any uas zone 
-  that is created/deleted or happened to be created/deleted while the subscription was paused and 
-  whose area intersects with the area of the subscription will appear/disappear from the map.
+  that is created/deleted or happened to have been created/deleted while the subscription was paused 
+  and whose area intersects with the area of the subscription, then it will appear/disappear from 
+  the map.
   
 - **pause** (deactivate) a subscription by clicking the button `Pause' on the pop up window. If the
   request succeeds the subscription area will turn into gray. From this moment onward no updates will
@@ -337,7 +342,7 @@ around. There you can:
 
 > NOTE: Besides subscription manipulation, Geofencing Viewer does not provide any interface for 
 > creating/deleting uas zones. For this purpose you can use the 
-> [Geofencing Service OpenAPI specs interface](#geofencing-service).
+> [Geofencing Service OpenAPI specs interface](#geofencing-service-specs).
 
 > NOTE: Geofencing Viewer is supposed to be a client application, .i.e out of the scope of 
 > Geofencing prototype. However, for the purpose of this demo it comes together with 
@@ -350,7 +355,7 @@ The interface will look similar to the below image:
 ![alt text](doc/img/geofencing_viewer.jpg "Geofencing Viewer")
 
 
-#### <a name="geofencing-service"></a> Geofencing Service
+#### <a name="geofencing-service-specs"></a> Geofencing Service
 The Geofencing Service OpenAPI specs interface can be accessed using the following link:
 [https://localhost/geofencing-service/api/1.0/ui/#/](https://localhost/geofencing-service/api/1.0/ui/#/). 
 In there you can interact with it by observing the various transactions of subscriptions that happen 
@@ -381,8 +386,8 @@ password you provided during the user configuration step earlier. The interface 
 > that the connections if not safe. This is expected because it's a prototype aiming at 
 > demo purposes and for that reason mock certificates were used.
 
-### Stopping the prototype
 
+### Stopping the prototype
 
 In order to tear the prototype down you can do:
 
@@ -395,7 +400,7 @@ If you also want to remove completely the involved docker containers you can do:
 ./geo.sh stop --clean
 ```
 
-and if you want to remove the involved docker containers and volumes as well you can do:
+and if you also want to remove the involved docker volumes you can do:
 ```shell
 ./geo.sh stop --purge
 ```
