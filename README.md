@@ -360,7 +360,12 @@ The Geofencing Service OpenAPI specs interface can be accessed using the followi
 [https://localhost/geofencing-service/api/1.0/ui/#/](https://localhost/geofencing-service/api/1.0/ui/#/). 
 In there you can interact with it by observing the various transactions of subscriptions that happen 
 while using Geofencing Viewer and/or create/delete/retrieve UAS Zones. You can login using the user 
-and password you provided during the user configuration step earlier. The interface will look like:
+and password you provided during the user configuration step earlier. 
+
+> NOTE: In order to authenticate you can use the user used by the Geofencing Viewer which was 
+> created earlier. You may find the username and password like this: `env | grep GEOFENCING_VIEWER_GS`
+
+The interface will look like:
 
 ![alt text](doc/img/geofencing_service.jpg "Geofencing Service")
 
@@ -370,17 +375,30 @@ Moreover, you may access the Subscription Manager OpenAPI specs site using the f
 [https://localhost/subscription-manager/api/1.0/ui/#/](https://localhost/subscription-manager/api/1.0/ui/#/). 
 In there you can observe the various transactions of topics and subscriptions that happen while 
 Geofencing Service is interacting with it. You can login using the user and password you provided 
-during the user configuration step earlier. The interface will look like:
+during the user configuration step earlier. 
+
+> NOTE: In order to authenticate you can use the SM_ADMIN user you created 
+> earlier. You may find the username and password like this: `env | grep SM_ADMIN`
+
+The interface will look like:
 
 ![alt text](doc/img/subscription-manager.jpg "Subscription Manager")
+
 
 #### RabbitMQ Management
 Lastly, you can also access the RabbitMQ management page using the following link:
 [https://localhost:15671/#/](https://localhost:15671/#/). In there you can observe the queues that are created/deleted while using Geofencing Viewer 
 as well as statistics about the flow of the incoming messages. You can login using the user and 
-password you provided during the user configuration step earlier. The interface will look line:
+password you provided during the user configuration step earlier. 
+
+> NOTE: In order to authenticate you can use the BROKER_ADMIN user you created 
+> earlier. You may find the username and password like this: `env | grep BROKER_ADMIN` 
+
+The interface will look line:
 
 ![alt text](doc/img/broker.jpg "RabbitMQ Management")
+
+
 
 > NOTE: the three above interfaces run over HTTPS and they might give you a warning saying 
 > that the connections if not safe. This is expected because it's a prototype aiming at 
