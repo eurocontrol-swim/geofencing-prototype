@@ -61,7 +61,7 @@
     },
     "otherReasonInfo": {
       "type": "string",
-      "maxLength": 30
+      "maxLength": 200
     },
     "regulationExemption": {
       "type": "string",
