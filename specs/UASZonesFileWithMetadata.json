@@ -1,0 +1,20 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "UASZonesFile",
+    "type": "object",
+    "properties": {
+        "title": {
+            "type": "string",
+            "maxLength": 100
+        },
+        "description": {
+            "type": "string",
+            "maxLength": 100
+        },
+        "features": {
+            "type": "array",
+            "items": {"$ref": "UASZone.json"},
+            "minItems": 1
+        }
+    }
+}
