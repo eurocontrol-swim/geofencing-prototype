@@ -1,0 +1,9 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "UASZonesFile",
+  "type": "array",
+  "items": {
+        "$ref": "UASZone.json"
+      },
+  "minItems": 1
+}
