@@ -16,5 +16,8 @@
             "items": {"$ref": "UASZone.json"},
             "minItems": 1
         }
-    }
+    },
+    "required": [
+        "properties"
+    ]
 }
