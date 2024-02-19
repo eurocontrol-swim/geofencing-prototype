@@ -17,8 +17,6 @@
             "minItems": 1
         }
     },
-    "required": [
-        "properties"
-    ],
+    "required": ["features"],
     "additionalProperties": false
 }
